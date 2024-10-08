@@ -1,4 +1,4 @@
-package com.globant.imdb2.screens
+package com.globant.imdb2.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -71,6 +71,15 @@ dependencies {
 
     implementation (libs.androidx.graphics.shapes)
 
+    implementation (libs.androidx.runtime.livedata)
+
+
+    // Retrofit for network requests
+    implementation (libs.retrofit2.retrofit)
+    implementation (libs.retrofit2.converter.gson)
+    // Coroutines for asynchronous programming
+    implementation (libs.kotlinx.coroutines.android)
+
     //Glide
     implementation(libs.landscapist.glide)
 
