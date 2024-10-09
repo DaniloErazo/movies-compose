@@ -30,10 +30,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.globant.imdb2.navigation.BottomNavigationItem
 import com.globant.imdb2.screens.DetailScreen
 import com.globant.imdb2.screens.HomeScreen
@@ -107,10 +109,15 @@ fun MainScreen(){
 
             NavHost(navController = navController, startDestination = "Home", modifier = Modifier.padding(innerPadding)){
                 composable(route = "Home") {
-                    HomeScreen()
+                    HomeScreen(navController)
                 }
                 composable(route = "Profile") {
                     ProfileScreen()
+                }
+
+                composable(route = "detail/{movieId}") { backStackEntry ->
+                    val movieId = backStackEntry.arguments?.getString("movieId")!!
+                    DetailScreen(navController, movieId)
                 }
             }
 

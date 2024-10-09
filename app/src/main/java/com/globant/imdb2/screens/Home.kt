@@ -1,5 +1,6 @@
 package com.globant.imdb2.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.globant.imdb2.R
 import com.globant.imdb2.entity.MovieDTO
 import com.globant.imdb2.model.Movie
@@ -47,8 +49,7 @@ import com.skydoves.landscapist.glide.GlideImage
 import java.util.Locale
 
 @Composable
-@Preview(showBackground = true)
-fun HomeScreen(){
+fun HomeScreen(navController: NavController){
     Column (verticalArrangement = Arrangement.spacedBy(15.dp),
         modifier = Modifier
             .fillMaxSize()
@@ -64,13 +65,15 @@ fun HomeScreen(){
 
         items.value?.let {
             Trailer(movie = it.first())
-            Carousel(title = "La mejor selección", movies = it.drop(1))
+            Carousel(title = "La mejor selección", movies = it.drop(1), navController)
         }
     }
 }
 
+
+
 @Composable
-fun Carousel(title: String, movies: List<MovieDTO>){
+fun Carousel(title: String, movies: List<MovieDTO>, navController: NavController){
     Column(modifier = Modifier
         .fillMaxWidth()
         .background(Color.White)){
@@ -97,7 +100,7 @@ fun Carousel(title: String, movies: List<MovieDTO>){
             .padding(top = 15.dp, bottom = 30.dp, start = 20.dp)
             .fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             items(movies) {movie ->
-                MovieCard(movie = movie)
+                MovieCard(movie = movie, navController = navController)
 
             }
         }
@@ -165,8 +168,9 @@ fun Trailer(movie: MovieDTO){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieCard(movie: MovieDTO){
-    Card(onClick = { /*TODO*/ },
+fun MovieCard(movie: MovieDTO, navController: NavController){
+    Card(onClick = {
+        navController.navigate("detail/${movie.identifier}")},
         shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomEnd = 5.dp, bottomStart = 5.dp), elevation = 5.dp,
         modifier = Modifier
             .height(240.dp)

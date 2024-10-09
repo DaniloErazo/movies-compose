@@ -1,5 +1,6 @@
 package com.globant.imdb2.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,116 +45,146 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.globant.imdb2.R
+import com.globant.imdb2.entity.MovieDetail
 import com.globant.imdb2.model.Movie
+import com.globant.imdb2.viewmodel.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true)
 @Composable
-fun DetailScreen(){
-    val movie = Movie(id = "1", name = "Gambito de dama", image = "", 4.5, originalTitle = "The Queens Gambit", description = "Ambientada en la Guerra Fría; una huérfana llamada Beth Harmon con un don para el ajedrez lucha contra las adicciones mientras… intenta ser la mejor jugadora del mundo.")
+fun DetailScreen(navController: NavController, movieId: String){
 
-    Scaffold(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(),
-        topBar = {
-            CenterAlignedTopAppBar(modifier = Modifier.shadow(2.dp),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                ),
-                title = {
-                    Text(
-                        movie.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                }
-            )
+    val vm: MainViewModel = viewModel()
 
-        }) { innerPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(innerPadding)
-            .background(colorResource(id = R.color.light_grey))){
-            Title(title = movie.name, original = movie.originalTitle )
+    val movie = vm.movie.observeAsState()
 
-            GlideImage(imageModel = "",
-                contentScale = ContentScale.Crop,
-                contentDescription = "movie trailer",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Gray)
-                    .height(250.dp)
-            )
-            MovieDetail()
-
-            Box(contentAlignment = Alignment.CenterStart, modifier = Modifier.fillMaxWidth()){
-
-                Divider(modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter))
-
-                Text(text = "Guía de episodios: ",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(20.dp))
-
-                Icon(modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 10.dp)
-                    .size(30.dp),
-                    imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                    contentDescription = "",
-                    tint = colorResource(id = R.color.dark_grey)
-                )
-
-                Divider(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter))
-
-            }
-
-
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp), contentAlignment = Alignment.Center){
-
-                Button(onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    contentPadding = PaddingValues(top=15.dp, bottom = 15.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.yellow))
-                ) {
-                    Text(text = "Agregar a mi lista de seguimiento",
-                        fontSize = 18.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
-
-            Subtitle(text = "Director: ")
-
-            Subtitle(text = "Escritores: ")
-
-            Subtitle(text = "Reparto y producción de la serie")
+    LaunchedEffect(movieId) {
+        if (movieId.isNotEmpty()) {
+            Log.d("HERE", movieId)
+            vm.loadMovie(movieId)
         }
     }
+
+    when (val movieData = movie.value) {
+        null -> {
+            // Show loading or empty state
+            Log.d("HERE", "Loading movie data...")
+        }
+        is MovieDetail -> {
+            Scaffold(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+                topBar = {
+                    CenterAlignedTopAppBar(modifier = Modifier.shadow(2.dp),
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = Color.White,
+                            titleContentColor = Color.Black,
+                        ),
+                        title = {
+                            Text(
+                                text = movie.value!!.movieName,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { /* do something */ }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Localized description"
+                                )
+                            }
+                        }
+                    )
+
+                }) { innerPadding ->
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
+                    .background(colorResource(id = R.color.light_grey))){
+                    Title(title = movie.value!!.movieName, original = movie.value!!.movieName )
+
+                    GlideImage(imageModel = "",
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "movie trailer",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Gray)
+                            .height(250.dp)
+                    )
+                    MovieDetail(movie.value!!.description, movie.value!!.genres.first().name, movie.value!!.score)
+
+                    Box(contentAlignment = Alignment.CenterStart, modifier = Modifier.fillMaxWidth()){
+
+                        Divider(modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter))
+
+                        Text(text = "Guía de episodios: ",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(20.dp))
+
+                        Icon(modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 10.dp)
+                            .size(30.dp),
+                            imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                            contentDescription = "",
+                            tint = colorResource(id = R.color.dark_grey)
+                        )
+
+                        Divider(modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter))
+
+                    }
+
+
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp), contentAlignment = Alignment.Center){
+
+                        Button(onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth(),
+                            contentPadding = PaddingValues(top=15.dp, bottom = 15.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.yellow))
+                        ) {
+                            Text(text = "Agregar a mi lista de seguimiento",
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    }
+
+                    Subtitle(text = "Director: ")
+
+                    Subtitle(text = "Escritores: ")
+
+                    Subtitle(text = "Reparto y producción de la serie")
+                }
+            }
+        }
+        else -> {
+            // Handle error or unexpected state
+        }
+    }
+
 
 }
 
@@ -160,7 +193,9 @@ fun Subtitle(text: String){
     Box(contentAlignment = Alignment.CenterStart, modifier = Modifier
         .fillMaxWidth()){
 
-        Divider(modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter))
+        Divider(modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.TopCenter))
 
         Text(text = text,
             fontWeight = FontWeight.Bold,
@@ -179,8 +214,7 @@ fun Subtitle(text: String){
 }
 
 @Composable
-//@Preview(showBackground = true, showSystemUi = true)
-fun MovieDetail(){
+fun MovieDetail(description: String, genre: String, score: Double){
 
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
@@ -214,7 +248,7 @@ fun MovieDetail(){
             }
         ) {
             Row(verticalAlignment = Alignment.CenterVertically){
-                Text(text="Drama",
+                Text(text= genre,
                     color = colorResource(id = R.color.dark_grey),
                     modifier = Modifier
                         .border(
@@ -227,10 +261,10 @@ fun MovieDetail(){
                     Icon(imageVector = Icons.Filled.Star, contentDescription = "star icon", tint = colorResource(
                         id = R.color.yellow
                     ))
-                    Text(text= "4.5", color = colorResource(id = R.color.dark_grey))
+                    Text(text= score.toString(), color = colorResource(id = R.color.dark_grey))
                 }
             }
-            Text(text = "Ambientada en la Guerra Fría; una huérfana llamada Beth Harmon con un don para el ajedrez lucha contra las adicciones mientras… intenta ser la mejor jugadora del mundo.")
+            Text(text = description)
 
         }
 
@@ -271,7 +305,7 @@ fun Title(title: String, original: String){
             color = colorResource(id = R.color.dark_grey),
             modifier = Modifier.padding(start = 40.dp, bottom = 10.dp))
 
-        Text(text = "Miniserie de TV 2020 - 2020 -16",
+        Text(text = "Cinema movie",
             fontSize = 16.sp,
             color = colorResource(id = R.color.dark_grey),
             modifier = Modifier.padding(start = 40.dp))

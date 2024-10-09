@@ -228,7 +228,6 @@ fun Title(title: String){
                     .size(8.dp, 35.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .background(color = colorResource(R.color.yellow))
-                    .clip(RoundedCornerShape(10.dp))
             )
             Text(
                 text = title,
