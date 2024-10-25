@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -44,32 +45,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.globant.imdb2.R
 import com.globant.imdb2.entity.MovieDetail
-import com.globant.imdb2.model.Movie
 import com.globant.imdb2.viewmodel.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavController, movieId: String){
+fun DetailScreen(navController: NavController, movieId: String, viewmodel: MainViewModel = hiltViewModel()){
 
-    val vm: MainViewModel = viewModel()
-
-    val movie = vm.movie.observeAsState()
+    val movie = viewmodel.movie.observeAsState()
 
     LaunchedEffect(movieId) {
         if (movieId.isNotEmpty()) {
-            Log.d("HERE", movieId)
-            vm.loadMovie(movieId)
+            viewmodel.loadMovie(movieId)
         }
     }
 
@@ -115,7 +110,7 @@ fun DetailScreen(navController: NavController, movieId: String){
                     .background(colorResource(id = R.color.light_grey))){
                     Title(title = movie.value!!.movieName, original = movie.value!!.movieName )
 
-                    GlideImage(imageModel = "",
+                    GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movieData.backImage,
                         contentScale = ContentScale.Crop,
                         contentDescription = "movie trailer",
                         modifier = Modifier
@@ -123,7 +118,7 @@ fun DetailScreen(navController: NavController, movieId: String){
                             .background(Color.Gray)
                             .height(250.dp)
                     )
-                    MovieDetail(movie.value!!.description, movie.value!!.genres.first().name, movie.value!!.score)
+                    MovieDetail(movie.value!!.description, movie.value!!.genres.first().name, movie.value!!.score, movie.value!!.movieImage)
 
                     Box(contentAlignment = Alignment.CenterStart, modifier = Modifier.fillMaxWidth()){
 
@@ -214,7 +209,7 @@ fun Subtitle(text: String){
 }
 
 @Composable
-fun MovieDetail(description: String, genre: String, score: Double){
+fun MovieDetail(description: String, genre: String, score: Double, poster: String){
 
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
@@ -223,7 +218,7 @@ fun MovieDetail(description: String, genre: String, score: Double){
 
         val (image, text, info) = createRefs()
 
-        GlideImage(imageModel = "",
+        GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + poster,
             contentScale = ContentScale.Crop,
             contentDescription = "movie poster",
             modifier = Modifier
@@ -264,7 +259,7 @@ fun MovieDetail(description: String, genre: String, score: Double){
                     Text(text= score.toString(), color = colorResource(id = R.color.dark_grey))
                 }
             }
-            Text(text = description)
+            Text(text = description, overflow = TextOverflow.Ellipsis)
 
         }
 

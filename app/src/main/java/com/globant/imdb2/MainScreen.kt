@@ -28,18 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.globant.imdb2.navigation.BottomNavigationItem
 import com.globant.imdb2.screens.DetailScreen
 import com.globant.imdb2.screens.HomeScreen
 import com.globant.imdb2.screens.ProfileScreen
+import com.globant.imdb2.screens.SearchScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -52,7 +50,7 @@ fun MainScreen(){
             icon = Icons.Outlined.Home
         ),
         BottomNavigationItem(
-            title = "Buscar",
+            title = "Search",
             selectedIcon = Icons.Filled.Search,
             icon = Icons.Outlined.Search
         ),
@@ -113,6 +111,9 @@ fun MainScreen(){
                 }
                 composable(route = "Profile") {
                     ProfileScreen()
+                }
+                composable(route = "Search") {
+                    SearchScreen()
                 }
 
                 composable(route = "detail/{movieId}") { backStackEntry ->

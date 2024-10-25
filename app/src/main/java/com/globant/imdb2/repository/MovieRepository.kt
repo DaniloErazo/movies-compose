@@ -2,18 +2,18 @@ package com.globant.imdb2.repository
 
 import com.globant.imdb2.entity.MovieDetail
 import com.globant.imdb2.entity.MovieResponse
-import com.globant.imdb2.network.RetrofitInstance
+import com.globant.imdb2.services.MovieServices
 import retrofit2.Response
+import javax.inject.Inject
 
-class MovieRepository {
 
-    private val movieService = RetrofitInstance.movieService
+class MovieRepository  @Inject constructor(private val apiService: MovieServices){
 
     fun getPopularMovies(): Response<MovieResponse> {
-        return movieService.getTopMovies().execute()
+        return apiService.getTopMovies().execute()
     }
 
      fun getMovieById(id: String): Response<MovieDetail>{
-        return movieService.getMovieById(id = id).execute()
+        return apiService.getMovieById(id = id).execute()
     }
 }
