@@ -93,7 +93,7 @@ fun DetailScreen(navController: NavController, movieId: String, viewmodel: MainV
                             )
                         },
                         navigationIcon = {
-                            IconButton(onClick = { /* do something */ }) {
+                            IconButton(onClick = { navController.popBackStack() }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Localized description"

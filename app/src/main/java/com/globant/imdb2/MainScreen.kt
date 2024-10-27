@@ -113,7 +113,7 @@ fun MainScreen(){
                     ProfileScreen()
                 }
                 composable(route = "Search") {
-                    SearchScreen()
+                    SearchScreen(navController = navController)
                 }
 
                 composable(route = "detail/{movieId}") { backStackEntry ->

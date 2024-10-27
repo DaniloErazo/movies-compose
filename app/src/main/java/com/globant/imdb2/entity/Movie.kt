@@ -39,5 +39,6 @@ data class MovieDetail(
 )
 
 data class Genre (
+    @SerializedName("name")
     val name: String
 )

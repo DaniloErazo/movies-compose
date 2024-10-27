@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="35.982" height="35.982" viewBox="0 0 35.982 35.982">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" y1="-0.009" x2="0.5" y2="1.043" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00b2ff"/>
+      <stop offset="1" stop-color="#006aff"/>
+    </linearGradient>
+  </defs>
+  <g id="facebook-2020-2-1" transform="translate(-17006.82 -17511.1)">
+    <circle id="Ellipse_1" cx="17.991" cy="17.991" r="17.991" transform="translate(17006.82 17511.1)" fill="#fff"/>
+    <path id="Path_1" d="M17819.361,18309.17a14.472,14.472,0,1,1-14.471,14.471A14.469,14.469,0,0,1,17819.361,18309.17Z" transform="translate(-794.55 -794.55)" fill-rule="evenodd" fill="url(#linear-gradient)"/>
+    <path id="Path_2" d="M19913.133,19744.08V19732.9h3.148l.418-3.934h-3.566l0-1.969c0-1.027.1-1.578,1.572-1.578h1.969v-3.934h-3.15c-3.785,0-5.119,1.908-5.119,5.119v2.361h-2.361v3.934h2.361v11.02a14.5,14.5,0,0,0,2.842.279,14.794,14.794,0,0,0,1.883-.121Z" transform="translate(-2886.439 -2200.639)" fill="#fff"/>
+  </g>
+</svg>

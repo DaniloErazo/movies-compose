@@ -10,5 +10,7 @@
     <color name="yellow">#F5C518</color>
     <color name="grey">#4B4747</color>
     <color name="light_grey">#F5F5F5</color>
-    <color name="dark_grey">#9D9C9C</color>
+    <color name="dark_grey">#707070</color>
+    <color name="medium_grey">#9D9C9C</color>
+
 </resources>

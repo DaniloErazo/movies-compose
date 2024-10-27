@@ -1,6 +1,7 @@
 package com.globant.imdb2.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,13 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.globant.imdb2.R
 import com.globant.imdb2.viewmodel.SearchScreenViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel()){
+fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel(), navController: NavController){
 
     val filteredItems by viewmodel.filtered.observeAsState(emptyList())
 
@@ -70,7 +72,7 @@ fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel()){
 
         LazyColumn(modifier = Modifier.padding(top = 10.dp)) {
             items(filteredItems){ movie ->
-                MovieCard(image = movie.movieImage, title = movie.movieName, date = movie.movieDate)
+                MovieCard(image = movie.movieImage, title = movie.movieName, date = movie.movieDate, id = movie.identifier, navController)
             }
 
         }
@@ -78,10 +80,12 @@ fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel()){
 }
 
 @Composable
-fun MovieCard(image:String, title: String, date: String){
+fun MovieCard(image:String, title: String, date: String, id: String, navController: NavController){
+
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(colorResource(id = R.color.light_grey))
+        .clickable { navController.navigate("detail/${id}")  }
         .padding(10.dp)){
 
         GlideImage(imageModel = "https://image.tmdb.org/t/p/w500$image",
