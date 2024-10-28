@@ -29,15 +29,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.globant.imdb2.navigation.BottomNavigationItem
+import com.globant.imdb2.navigation.MainNavHost
 import com.globant.imdb2.screens.DetailScreen
 import com.globant.imdb2.screens.HomeScreen
 import com.globant.imdb2.screens.ProfileScreen
 import com.globant.imdb2.screens.SearchScreen
+import com.globant.imdb2.screens.SignUp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -70,13 +72,10 @@ fun MainScreen(){
         mutableIntStateOf(0)
     }
 
-    val navController = rememberNavController()
-
     Surface(modifier = Modifier.fillMaxSize()) {
+        val navController = rememberNavController()
 
         Scaffold (bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
             NavigationBar(containerColor = colorResource(id = R.color.yellow), modifier = Modifier.clip(RoundedCornerShape(45.dp, 45.dp, 0.dp, 0.dp))) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -86,8 +85,7 @@ fun MainScreen(){
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
+
                                 launchSingleTop = true
                                 // Restore state when reselecting a previously selected item
                                 restoreState = true
@@ -104,23 +102,7 @@ fun MainScreen(){
                 }
             }
         }) { innerPadding ->
-
-            NavHost(navController = navController, startDestination = "Home", modifier = Modifier.padding(innerPadding)){
-                composable(route = "Home") {
-                    HomeScreen(navController)
-                }
-                composable(route = "Profile") {
-                    ProfileScreen()
-                }
-                composable(route = "Search") {
-                    SearchScreen(navController = navController)
-                }
-
-                composable(route = "detail/{movieId}") { backStackEntry ->
-                    val movieId = backStackEntry.arguments?.getString("movieId")!!
-                    DetailScreen(navController, movieId)
-                }
-            }
+            MainNavHost(navController = navController, Modifier.padding(innerPadding))
 
         }
 

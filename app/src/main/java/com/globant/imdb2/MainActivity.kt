@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.globant.imdb2.navigation.AppNavHost
+import com.globant.imdb2.screens.SignIn
 import com.globant.imdb2.ui.theme.Imdb2Theme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,10 +21,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            //https://medium.com/@KaushalVasava/navigation-in-jetpack-compose-full-guide-beginner-to-advanced-950c1133740
             Imdb2Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen()
+                    AppNavHost(navController = rememberNavController())
                 }
             }
         }

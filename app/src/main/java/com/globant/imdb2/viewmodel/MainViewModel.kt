@@ -7,6 +7,7 @@ import com.globant.imdb2.entity.MovieDTO
 import com.globant.imdb2.entity.MovieDetail
 import com.globant.imdb2.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,9 +21,12 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository)
     private var _movie = MutableLiveData<MovieDetail>()
     val movie = _movie
 
+    val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+        throwable.printStackTrace()
+    }
 
     fun loadMovies(){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler){
             val response = repository.getPopularMovies()
             _movies.postValue(response.body()?.results)
         }

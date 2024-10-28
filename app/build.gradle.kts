@@ -98,8 +98,8 @@ dependencies {
     implementation(libs.androidx.material)
 
     //Room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.androidx.room.ktx)
     kapt(libs.room.compiler)
 
 

@@ -2,6 +2,7 @@ package com.globant.imdb2.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,11 +38,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.globant.imdb2.R
 
 @Composable
-@Preview
-fun SignIn(){
+fun SignIn(navController: NavController){
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
         .fillMaxSize()
@@ -111,6 +112,7 @@ fun SignIn(){
                     fontWeight = FontWeight.Bold,
                     text = "Regístrate",
                     textAlign = TextAlign.Center ,
+                    modifier = Modifier.clickable { navController.navigate("Register") }
                 )
             }
 
@@ -121,7 +123,7 @@ fun SignIn(){
                 fontWeight = FontWeight.Bold,
                 text = "Continuar como invitado",
                 textAlign = TextAlign.Center ,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().clickable { navController.navigate("main_graph") }
             )
 
         }
