@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,22 +55,26 @@ fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel(), navControll
             mutableStateOf(false)
         }
 
-        SearchBar(modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 10.dp, start = 10.dp),
-            query = query,
-            onQueryChange = { query = it
-                            viewmodel.filterMovies(query) },
-            onSearch = {active = false
-                viewmodel.filterMovies(query)},
-            active = active ,
-            onActiveChange = {active = it},
-            placeholder = {Text("Busca una película")},
-            leadingIcon = {Icon(Icons.Default.Search, contentDescription = null)}
+        SearchBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 10.dp, start = 10.dp),
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = query,
+                    onQueryChange = {query = it
+                        viewmodel.filterMovies(query)},
+                    onSearch = { active = false },
+                    expanded = active,
+                    onExpandedChange = { active = false },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    placeholder = { Text("Busca una película") }
+                )
+            },
+            expanded = active,
+            onExpandedChange = { active = it },
         ) {
-
         }
-
 
         LazyColumn(modifier = Modifier.padding(top = 10.dp)) {
             items(filteredItems){ movie ->
@@ -85,7 +91,7 @@ fun MovieCard(image:String, title: String, date: String, id: String, navControll
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(colorResource(id = R.color.light_grey))
-        .clickable { navController.navigate("detail/${id}")  }
+        .clickable { navController.navigate("detail/${id}") }
         .padding(10.dp)){
 
         GlideImage(imageModel = "https://image.tmdb.org/t/p/w500$image",

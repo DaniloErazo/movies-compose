@@ -17,7 +17,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavController){
         }
 
         composable(route = "Register") {
-            SignUp()
+            SignUp(navController = navController)
         }
     }
 

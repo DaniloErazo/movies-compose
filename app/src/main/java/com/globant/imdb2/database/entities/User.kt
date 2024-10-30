@@ -13,5 +13,9 @@ data class User(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name= "password")
-    val password: String
+    val password: String,
+    @ColumnInfo(name = "salt")
+    val salt: String,
+    @ColumnInfo(name = "avatar_color")
+    val color: Int
 )

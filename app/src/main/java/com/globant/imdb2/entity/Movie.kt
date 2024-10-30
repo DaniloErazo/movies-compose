@@ -1,5 +1,6 @@
 package com.globant.imdb2.entity
 
+import com.globant.imdb2.database.entities.Movie
 import com.google.gson.annotations.SerializedName
 
 data class MovieDTO(
@@ -16,6 +17,17 @@ data class MovieDTO(
     @SerializedName("vote_average")
     val score: Double
 )
+
+fun MovieDTO.toEntity(): Movie {
+    return Movie(
+        identifier = this.identifier,
+        movieName = this.movieName,
+        backImage = this.backImage,
+        movieImage = this.movieImage,
+        movieDate = this.movieDate,
+        score = this.score
+    )
+}
 
 data class MovieResponse(
     val results: List<MovieDTO>

@@ -13,5 +13,9 @@ data class Movie (
     @ColumnInfo(name = "release_date")
     val movieDate: String,
     @ColumnInfo(name = "image_path")
-    val movieImage: String
+    val movieImage: String,
+    @ColumnInfo(name = "background_image_path")
+    val backImage: String,
+    @ColumnInfo(name = "score")
+    val score: Double
 )

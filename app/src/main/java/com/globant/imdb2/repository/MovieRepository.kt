@@ -22,4 +22,9 @@ class MovieRepository  @Inject constructor(private val apiService: MovieServices
     suspend fun getLocalMovies(): List<Movie>{
         return movieDao.getAllMovies()
     }
+
+    suspend fun saveLocalMovies(items: List<Movie>): Unit{
+        movieDao.deleteAll()
+        return movieDao.saveAll(items)
+    }
 }

@@ -1,5 +1,6 @@
 package com.globant.imdb2.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -29,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -38,11 +42,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.globant.imdb2.R
+import com.globant.imdb2.viewmodel.LoginViewModel
 
 @Composable
-fun SignIn(navController: NavController){
+fun SignIn(navController: NavController, viewModel: LoginViewModel = hiltViewModel()){
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
         .fillMaxSize()
@@ -67,6 +73,26 @@ fun SignIn(navController: NavController){
                 mutableStateOf("")
             }
 
+            val errorLogin by viewModel.errorLogin.observeAsState()
+            val loggedUser by viewModel.loggedUser.observeAsState()
+
+            val context = LocalContext.current
+
+            LaunchedEffect(errorLogin) {
+                errorLogin?.let { message ->
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            LaunchedEffect(loggedUser) {
+                loggedUser?.let { state ->
+                    if(state.isLogged){
+                        navController.navigate("main_graph")
+                    }
+                }
+
+            }
+
             InputText(name = "Usuario", input = username ) {username = it}
 
             InputPassword(input = password) {password = it}
@@ -77,7 +103,7 @@ fun SignIn(navController: NavController){
 
             val isButttonEnabled = username.isNotEmpty() && password.isNotEmpty()
 
-            Button(text = "Login", isButttonEnabled)
+            Button(text = "Login", isButttonEnabled, onClick = {viewModel.signInUser(username, password)})
 
             Spacer(modifier = Modifier.size(25.dp))
 
@@ -123,14 +149,13 @@ fun SignIn(navController: NavController){
                 fontWeight = FontWeight.Bold,
                 text = "Continuar como invitado",
                 textAlign = TextAlign.Center ,
-                modifier = Modifier.fillMaxWidth().clickable { navController.navigate("main_graph") }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { navController.navigate("main_graph") }
             )
 
         }
     }
-
-
-
 }
 
 @Composable
@@ -194,8 +219,8 @@ fun InputText(name: String, input:String, onChange:(String)->Unit){
 }
 
 @Composable
-fun Button(text: String, enabled: Boolean){
-    Button(onClick = { /*TODO*/ },
+fun Button(text: String, enabled: Boolean, onClick: () -> Unit){
+    Button(onClick = { onClick() },
         modifier = Modifier
             .fillMaxWidth(),
         enabled = enabled,

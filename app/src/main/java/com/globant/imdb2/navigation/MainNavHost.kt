@@ -17,7 +17,6 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier){
     NavHost(navController = navController,
         startDestination = "Home",
         route = "main_graph",
-        modifier = modifier
     ) {
         composable(route = "Home") {
             HomeScreen(navController)
