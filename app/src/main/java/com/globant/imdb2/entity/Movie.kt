@@ -29,6 +29,19 @@ fun MovieDTO.toEntity(): Movie {
     )
 }
 
+fun Movie.toMovieDTO(): MovieDTO {
+    return MovieDTO(
+        identifier = this.identifier,
+        movieName = this.movieName,
+        backImage = this.backImage,
+        movieImage = this.movieImage,
+        movieDate = this.movieDate,
+        score = this.score
+    )
+}
+
+
+
 data class MovieResponse(
     val results: List<MovieDTO>
 )

@@ -1,20 +1,24 @@
 package com.globant.imdb2.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.entity.MovieDTO
 import com.globant.imdb2.entity.MovieDetail
 import com.globant.imdb2.entity.toEntity
+import com.globant.imdb2.entity.toMovieDTO
 import com.globant.imdb2.repository.MovieRepository
+import com.globant.imdb2.utils.NetworkUtils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: MovieRepository): ViewModel() {
+class MainViewModel @Inject constructor(private val repository: MovieRepository, @ApplicationContext private val context: Context): ViewModel() {
 
     private var _movies = MutableLiveData<List<MovieDTO>>()
     val movies = _movies
@@ -25,11 +29,17 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository)
 
     fun loadMovies(){
         viewModelScope.launch(Dispatchers.IO){
-            val response = repository.getPopularMovies()
-            response.body()?.results?.let { movies ->
-                repository.saveLocalMovies(movies.map { it.toEntity() })
+
+            if(isInternetAvailable(context)){
+                val response = repository.getPopularMovies()
+                response.body()?.results?.let { movies ->
+                    repository.saveLocalMovies(movies.map { it.toEntity() })
+                }
+                _movies.postValue(response.body()?.results)
+            }else{
+                _movies.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
             }
-            _movies.postValue(response.body()?.results)
+
         }
     }
 
@@ -40,6 +50,7 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository)
         }
 
     }
+
 
 
 }

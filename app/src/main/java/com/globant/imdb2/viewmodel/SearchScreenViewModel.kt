@@ -1,17 +1,21 @@
 package com.globant.imdb2.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.entity.MovieDTO
+import com.globant.imdb2.entity.toMovieDTO
 import com.globant.imdb2.repository.MovieRepository
+import com.globant.imdb2.utils.NetworkUtils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchScreenViewModel @Inject constructor(private val repository: MovieRepository) : ViewModel() {
+class SearchScreenViewModel @Inject constructor(private val repository: MovieRepository, @ApplicationContext private val context: Context) : ViewModel() {
 
     private val _movies = MutableLiveData<List<MovieDTO>>()
     val filtered = MutableLiveData<List<MovieDTO>>()
@@ -19,10 +23,19 @@ class SearchScreenViewModel @Inject constructor(private val repository: MovieRep
 
     private fun loadMovies(){
         viewModelScope.launch(Dispatchers.IO){
-            val response = repository.getPopularMovies()
-            _movies.postValue(response.body()?.results)
-            filtered.postValue(response.body()?.results)
-            dataFetched.postValue(true)
+
+            if(isInternetAvailable(context)){
+                val response = repository.getPopularMovies()
+                _movies.postValue(response.body()?.results)
+                filtered.postValue(response.body()?.results)
+                dataFetched.postValue(true)
+            }else{
+                _movies.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
+                filtered.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
+                dataFetched.postValue(true)
+            }
+
+
 
         }
     }
