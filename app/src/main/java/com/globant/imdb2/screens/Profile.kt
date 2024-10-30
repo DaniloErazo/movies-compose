@@ -1,5 +1,6 @@
 package com.globant.imdb2.screens
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +30,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -42,18 +44,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.globant.imdb2.R
 import com.globant.imdb2.viewmodel.LoginViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Composable
-@Preview
-fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
+fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel(), logout: () -> Unit){
 
-    val user by viewModel.loggedUser.observeAsState()
+    val loggedUser by viewModel.loggedUser.observeAsState()
+    val user = loggedUser?.user
+
+    LaunchedEffect(Unit) {
+        viewModel.loadCurrentUser()
+    }
 
 
     Column (modifier = Modifier
         .fillMaxSize()
+        .padding(bottom = 100.dp)
         .verticalScroll(rememberScrollState())
         .background(colorResource(id = R.color.light_grey)), verticalArrangement = Arrangement.spacedBy(15.dp)) {
 
@@ -65,7 +74,7 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
                 .fillMaxWidth()
                 .padding(20.dp), contentAlignment = Alignment.CenterStart){
 
-                val color = android.graphics.Color.argb(255, 231, 200, 150)
+                val colorValue = user?.color ?: android.graphics.Color.argb(255, 231, 200, 150)
 
                 Row(modifier = Modifier.align(
                     Alignment.CenterStart), verticalAlignment = Alignment.CenterVertically){
@@ -74,11 +83,12 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
                             .size(50.dp)
                             .border(BorderStroke(0.3.dp, Color.Black), CircleShape)
                             .clip(CircleShape)
-                            .background(Color(color)),
+                            .background(Color(colorValue)),
                         contentAlignment = Alignment.Center
                     ) {
+                        val capitalLetter = user?.name?.first()?.uppercaseChar()?.toString() ?: "B"
                         Text(
-                            text = "M",
+                            text = capitalLetter ,
                             textAlign = TextAlign.Center,
                             fontSize = 24.sp
                         )
@@ -95,7 +105,7 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
 
                      */
 
-                    Text(text = user?.user?.name ?: "", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(start= 10.dp))
+                    Text(text = user?.name ?: "Invitado", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(start= 10.dp))
                 }
                 Icon(modifier = Modifier
                     .align(Alignment.CenterEnd)
@@ -141,7 +151,7 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
                 fontSize = 16.sp
             )
 
-            BigButton(text = "Empieza tu lista de seguimiento")
+            BigButton(text = "Empieza tu lista de seguimiento", {})
         }
 
         Column(modifier = Modifier
@@ -163,7 +173,7 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
                 fontSize = 16.sp
             )
 
-            BigButton(text = "Agregar personas favoritas")
+            BigButton(text = "Agregar personas favoritas", {})
         }
 
         Column(modifier = Modifier
@@ -175,6 +185,16 @@ fun ProfileScreen(viewModel: LoginViewModel = hiltViewModel()){
             Subtitle(text = "Notificaciones")
             Subtitle(text = "Mejorar selecciones principales")
 
+        }
+
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)) {
+
+            BigButton(text = "Log Out") {
+                viewModel.logOutCurrentUser()
+                logout()
+            }
         }
 
     }
@@ -217,8 +237,8 @@ fun SimpleCard(cardName: String, counter: String, description: String){
 }
 
 @Composable
-fun BigButton(text: String){
-    Button(onClick = { /*TODO*/ },
+fun BigButton(text: String, onClick: () ->Unit){
+    Button(onClick = { onClick() },
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth(),

@@ -28,7 +28,10 @@ fun AppNavHost(
     ) {
         authNavGraph(navController)
         composable (route = "main_graph"){
-            MainScreen()
+            MainScreen(logout = {
+                navController.navigate("auth_graph") {
+                    popUpTo(0){}
+                }})
         }
     }
 }

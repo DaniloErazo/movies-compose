@@ -43,7 +43,7 @@ import com.globant.imdb2.screens.SignUp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(){
+fun MainScreen(logout: () -> Unit){
 
     val items = listOf(
         BottomNavigationItem(
@@ -102,7 +102,7 @@ fun MainScreen(){
                 }
             }
         }) { innerPadding ->
-            MainNavHost(navController = navController, Modifier.padding(innerPadding))
+            MainNavHost(navController = navController, Modifier.padding(innerPadding), logout)
 
         }
 

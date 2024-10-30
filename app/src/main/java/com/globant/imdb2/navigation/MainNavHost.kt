@@ -12,7 +12,7 @@ import com.globant.imdb2.screens.ProfileScreen
 import com.globant.imdb2.screens.SearchScreen
 
 @Composable
-fun MainNavHost(navController: NavHostController, modifier: Modifier){
+fun MainNavHost(navController: NavHostController, modifier: Modifier, logout: ()->Unit){
 
     NavHost(navController = navController,
         startDestination = "Home",
@@ -22,7 +22,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier){
             HomeScreen(navController)
         }
         composable(route = "Profile") {
-            ProfileScreen()
+            ProfileScreen(logout = logout)
         }
         composable(route = "Search") {
             SearchScreen(navController = navController)

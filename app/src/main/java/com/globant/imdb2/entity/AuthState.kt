@@ -4,5 +4,5 @@ import com.globant.imdb2.database.entities.User
 
 data class AuthState(
     var isLogged: Boolean = false,
-    var user: User
+    var user: User?
 )

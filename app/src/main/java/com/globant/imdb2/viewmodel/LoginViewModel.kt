@@ -92,6 +92,39 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
         }
     }
 
+    fun logOutCurrentUser(){
+        viewModelScope.launch {
+            loggedUser.postValue(AuthState(false, null))
+            sharedPreferences.edit().apply{
+                putString("username", "")
+                putBoolean("is_logged_in", false)
+            }.apply()
+        }
+    }
+
+    fun loadUser(email: String){
+        viewModelScope.launch (Dispatchers.IO){
+            try {
+                val user = userRepository.getUserByEmail(email)
+                loggedUser.postValue(AuthState(true, user))
+            }catch (e: Exception){
+            }
+        }
+    }
+
+    fun loadCurrentUser(){
+        viewModelScope.launch (Dispatchers.IO){
+            try {
+                val email = sharedPreferences.getString("username", "")
+                val user = userRepository.getUserByEmail(email!!)
+                loggedUser.postValue(AuthState(true, user))
+
+            }catch (e: Exception){
+                //
+            }
+        }
+    }
+
     private fun generateRandomColor(): Int {
         val red = Random.nextInt(256)
         val green = Random.nextInt(256)
