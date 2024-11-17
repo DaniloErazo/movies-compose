@@ -111,8 +111,6 @@ class MainViewModelTest {
 
         `when`(repository.getPopularMovies()).thenReturn(Response.success(MovieResponse(mockMovies)))
 
-
-
         viewModel.movies.observeForever { }
 
         viewModel.loadMovies()

@@ -21,7 +21,7 @@ class SearchScreenViewModel @Inject constructor(private val repository: MovieRep
     val filtered = MutableLiveData<List<MovieDTO>>()
     var dataFetched = MutableLiveData<Boolean>()
 
-    private fun loadMovies(){
+    fun loadMovies(){
         viewModelScope.launch(Dispatchers.IO){
 
             if(isInternetAvailable(context)){
@@ -30,18 +30,16 @@ class SearchScreenViewModel @Inject constructor(private val repository: MovieRep
                 filtered.postValue(response.body()?.results)
                 dataFetched.postValue(true)
             }else{
-                _movies.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
-                filtered.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
+                val movies = repository.getLocalMovies().map { it.toMovieDTO() }
+                _movies.postValue(movies)
+                filtered.postValue(movies)
                 dataFetched.postValue(true)
             }
-
-
-
         }
     }
 
     fun filterMovies(query: String) {
-        filtered.value = if (query.isBlank()) {
+        filtered.value = if (query.isEmpty()) {
             _movies.value
         } else {
             filtered.value?.filter {
