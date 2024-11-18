@@ -91,8 +91,6 @@ class LoginViewModelTest {
         Dispatchers.resetMain() // Reset Main dispatcher to the original Main dispatcher
     }
 
-
-
     @Test
     fun `test signInUser with correct credentials`() = runTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
@@ -102,6 +100,8 @@ class LoginViewModelTest {
         viewModel.loggedUser.observeForever(observer)
 
         viewModel.signInUser(testEmail, testPassword)
+
+        advanceUntilIdle()
 
         verify(observer).onChanged(AuthState(true, testUser))
         verify(editor).putString("username", testEmail)
@@ -128,12 +128,14 @@ class LoginViewModelTest {
     @Test
     fun `test signUpUser when email is already taken`() = runTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
-        `when`(cryptoUtils.checkPassword(testPassword, testHashedPassword, testSaltByte)).thenReturn(false)
+        `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(false)
 
         val errorLoginObserver = mock(Observer::class.java) as Observer<String>
         viewModel.errorLogin.observeForever(errorLoginObserver)
 
         viewModel.signUpUser(testEmail, "Test User", testPassword)
+
+        advanceUntilIdle()
 
         verify(errorLoginObserver).onChanged("El correo ya se encuentra registrado, por favor inicia sesión")
     }

@@ -32,7 +32,7 @@ import retrofit2.Response
 class SearchScreenViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule() // Ensures LiveData updates happen instantly during testing
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: SearchScreenViewModel
 
@@ -51,7 +51,7 @@ class SearchScreenViewModelTest {
         Movie(identifier = "3", movieName = "The Dark Knight", backImage = "/path3", movieImage = "/poster3", movieDate = "2008-07-18", score = 9.0)
     )
 
-    private suspend fun setup() {
+    private suspend fun setup() = runTest {
         val mockContext = mock(Context::class.java)
         val mockConnectivityManager = mock(ConnectivityManager::class.java)
 
@@ -67,10 +67,12 @@ class SearchScreenViewModelTest {
 
         viewModel = SearchScreenViewModel(repository, mockContext)
 
+        advanceUntilIdle()
+
         Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
-    private suspend fun setupNoConnection(){
+    private suspend fun setupNoConnection() = runTest{
         val mockContext = mock(Context::class.java)
         val mockConnectivityManager = mock(ConnectivityManager::class.java)
 
@@ -85,6 +87,8 @@ class SearchScreenViewModelTest {
         `when`(repository.getLocalMovies()).thenReturn(movieList)
 
         viewModel = SearchScreenViewModel(repository, mockContext)
+
+        advanceUntilIdle()
 
         Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -127,10 +131,8 @@ class SearchScreenViewModelTest {
     }
 
     @Test
-    fun `test filterMovies with query2`() = runTest {
+    fun `test filterMovies with query`() = runTest {
         setup()
-
-        `when`(repository.getPopularMovies()).thenReturn(MovieResponse(movieListDTO))
 
         val filteredObserver = mock(Observer::class.java) as Observer<List<MovieDTO>>
         viewModel.filtered.observeForever(filteredObserver)
@@ -138,8 +140,6 @@ class SearchScreenViewModelTest {
         viewModel.loadMovies()
 
         viewModel.filterMovies("Godfather")
-
-        advanceUntilIdle()
 
         val filteredMovies = viewModel.filtered.value
         assertNotNull(filteredMovies)

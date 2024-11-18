@@ -15,8 +15,8 @@ class MovieRepository  @Inject constructor(private val apiService: MovieServices
         return apiService.getTopMovies()
     }
 
-     fun getMovieById(id: String): Response<MovieDetail>{
-        return apiService.getMovieById(id = id).execute()
+    suspend fun getMovieById(id: String): MovieDetail{
+        return apiService.getMovieById(id = id)
     }
 
     suspend fun getLocalMovies(): List<Movie>{

@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
 
     fun signInUser(email: String, password: String) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch(Dispatchers.IO) {
 
             try {
                 val user = userRepository.getUserByEmail(email)
@@ -65,22 +65,20 @@ class LoginViewModel @Inject constructor(
 
     fun signUpUser(email: String, name: String, password: String) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch(Dispatchers.IO) {
 
             try {
                 val user = userRepository.getUserByEmail(email)
 
                 if (user.email == email) {
-                    withContext(Dispatchers.Main) {
                         errorLogin.postValue("El correo ya se encuentra registrado, por favor inicia sesión")
-                    }
                 }
 
             } catch (e: Exception) {
                 val salt = cryptoUtils.generateSalt()
                 val hashedPassword = cryptoUtils.hashPassword(password, salt)
                 val saveableSalt = Base64.getEncoder().encodeToString(salt)
-                val avatarColor = generateRandomColor()
+                val avatarColor = 0
                 val newUSer = User(
                     email = email,
                     name = name,
@@ -90,16 +88,13 @@ class LoginViewModel @Inject constructor(
 
                 userRepository.addUser(newUSer)
                 loggedUser.postValue(AuthState(true, newUSer))
-
-                withContext(Dispatchers.Main) {
-                }
             }
 
         }
     }
 
     fun logOutCurrentUser(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             loggedUser.postValue(AuthState(false, null))
             sharedPreferences.edit().apply{
                 putString("username", "")

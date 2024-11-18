@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
 
 
     fun loadMovies(){
-        viewModelScope.launch(){
+        viewModelScope.launch(Dispatchers.IO){
 
             if(isInternetAvailable(context)){
                 val response = repository.getPopularMovies()
@@ -45,13 +45,11 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
     }
 
     fun loadMovie(id: String){
-        viewModelScope.launch(){
+        viewModelScope.launch(Dispatchers.IO){
             val response = repository.getMovieById(id)
-            _movie.postValue(response.body())
+            _movie.postValue(response)
         }
-
     }
-
 
 
 }

@@ -13,7 +13,7 @@ interface MovieServices {
     suspend fun getTopMovies(@Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): MovieResponse
 
     @GET("movie/{id}")
-    fun getMovieById(@Path("id") id:String, @Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): Call<MovieDetail>
+    suspend fun getMovieById(@Path("id") id:String, @Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): MovieDetail
 
     @GET("movie/top_rated")
     fun getBestMovies(@Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): Call<MovieResponse>

@@ -24,7 +24,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -115,6 +114,8 @@ class MainViewModelTest {
 
         viewModel.loadMovies()
 
+        advanceUntilIdle()
+
         assertEquals(mockMovies, viewModel.movies.value)
         verify(repository).getPopularMovies()
     }
@@ -137,10 +138,11 @@ class MainViewModelTest {
             description = "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
             genres = genres
        )
-
-        `when`(repository.getMovieById("1")).thenReturn(Response.success(mockMovieDetail))
+        `when`(repository.getMovieById("1")).thenReturn(mockMovieDetail)
 
         viewModel.loadMovie("1")
+
+        advanceUntilIdle()
 
         assertEquals(mockMovieDetail, viewModel.movie.value)
         verify(repository).getMovieById("1")
