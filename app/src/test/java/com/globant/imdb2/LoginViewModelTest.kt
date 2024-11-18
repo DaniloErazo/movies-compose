@@ -15,6 +15,9 @@ import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -75,24 +78,23 @@ class LoginViewModelTest {
     fun setup() {
 
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
         `when`(mockContext.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)).thenReturn(sharedPreferences)
         `when`(sharedPreferences.getBoolean("is_logged_in", false)).thenReturn(false)
         `when`(sharedPreferences.edit()).thenReturn(editor)
 
-        // Initialize ViewModel
         viewModel = LoginViewModel(userRepository, mockContext, cryptoUtils)
-        Dispatchers.setMain(UnconfinedTestDispatcher())
 
     }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain() // Reset Main dispatcher to the original Main dispatcher
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `test signInUser with correct credentials`() = runTest {
+    fun `test signInUser with correct credentials`() = runBlocking {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(true)
 
@@ -110,7 +112,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `test signInUser with incorrect password`() = runTest {
+    fun `test signInUser with incorrect password`() = runBlocking {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(testPassword, testHashedPassword, testSaltByte)).thenReturn(false)
 
@@ -126,7 +128,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `test signUpUser when email is already taken`() = runTest {
+    fun `test signUpUser when email is already taken`() = runBlocking {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(false)
 
@@ -141,7 +143,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `test signUpUser when new user signs up`() = runTest {
+    fun `test signUpUser when new user signs up`() = runBlocking {
         `when`(userRepository.getUserByEmail(testEmail)).thenThrow(RuntimeException())
 
         `when`(cryptoUtils.generateSalt()).thenReturn(testSaltByte)
@@ -159,7 +161,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `test logOutCurrentUser`() = runTest {
+    fun `test logOutCurrentUser`() = runBlocking {
         val loggedUserObserver = mock(Observer::class.java) as Observer<AuthState>
         viewModel.loggedUser.observeForever(loggedUserObserver)
 
@@ -173,7 +175,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `test loadCurrentUser when user is logged in`() = runTest {
+    fun `test loadCurrentUser when user is logged in`() = runBlocking {
         `when`(sharedPreferences.getString("username", "")).thenReturn(testEmail)
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
 

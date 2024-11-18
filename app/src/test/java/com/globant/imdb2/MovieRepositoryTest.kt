@@ -77,11 +77,13 @@ class MovieRepositoryTest {
     }
 
     @Test
-    fun `test getMovieById returns correct movie detail`() = runTest{
+    fun `test getMovieById returns correct movie detail`() = runTest {
         `when`(mockMovieServices.getMovieById("1")).thenReturn(fakeMovieDetail)
 
+        // Act
         val result = movieRepository.getMovieById("1")
 
+        // Assert
         assertNotNull(result)
         assertEquals(result, fakeMovieDetail)
         verify(mockMovieServices).getMovieById("1")
