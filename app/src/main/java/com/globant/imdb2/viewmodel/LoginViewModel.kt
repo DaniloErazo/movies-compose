@@ -36,13 +36,12 @@ class LoginViewModel @Inject constructor(
 
     fun signInUser(email: String, password: String) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch{
 
             try {
                 val user = userRepository.getUserByEmail(email)
                 val salt = Base64.getDecoder().decode(user.salt)
                 if(cryptoUtils.checkPassword(password, user.password, salt)){
-                    System.out.println("pass verification")
                     loggedUser.postValue(AuthState(true, user))
                     sharedPreferences.edit().apply{
                         putString("username", user.email)
@@ -65,7 +64,7 @@ class LoginViewModel @Inject constructor(
 
     fun signUpUser(email: String, name: String, password: String) {
 
-        viewModelScope.launch() {
+        viewModelScope.launch{
 
             try {
                 val user = userRepository.getUserByEmail(email)
@@ -99,7 +98,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun logOutCurrentUser(){
-        viewModelScope.launch {
+        viewModelScope.launch{
             loggedUser.postValue(AuthState(false, null))
             sharedPreferences.edit().apply{
                 putString("username", "")
@@ -109,7 +108,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun loadUser(email: String){
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch{
             try {
                 val user = userRepository.getUserByEmail(email)
                 loggedUser.postValue(AuthState(true, user))
@@ -119,7 +118,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun loadCurrentUser(){
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch{
             try {
                 val email = sharedPreferences.getString("username", "")
                 val user = userRepository.getUserByEmail(email!!)

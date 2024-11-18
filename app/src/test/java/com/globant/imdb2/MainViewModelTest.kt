@@ -24,7 +24,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -138,7 +137,7 @@ class MainViewModelTest {
             genres = genres
        )
 
-        `when`(repository.getMovieById("1")).thenReturn(Response.success(mockMovieDetail))
+        `when`(repository.getMovieById("1")).thenReturn(mockMovieDetail)
 
         viewModel.loadMovie("1")
 

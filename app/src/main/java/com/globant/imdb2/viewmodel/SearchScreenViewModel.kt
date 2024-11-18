@@ -22,7 +22,7 @@ class SearchScreenViewModel @Inject constructor(private val repository: MovieRep
     var dataFetched = MutableLiveData<Boolean>()
 
     fun loadMovies(){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
 
             if(isInternetAvailable(context)){
                 val response = repository.getPopularMovies()
