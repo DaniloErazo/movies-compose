@@ -51,7 +51,7 @@ class SearchScreenViewModelTest {
         Movie(identifier = "3", movieName = "The Dark Knight", backImage = "/path3", movieImage = "/poster3", movieDate = "2008-07-18", score = 9.0)
     )
 
-    private fun setup() {
+    private suspend fun setup() {
         val mockContext = mock(Context::class.java)
         val mockConnectivityManager = mock(ConnectivityManager::class.java)
 
@@ -63,7 +63,7 @@ class SearchScreenViewModelTest {
         `when`(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
             .thenReturn(true)
 
-        `when`(repository.getPopularMovies()).thenReturn(Response.success(MovieResponse(movieListDTO)))
+        `when`(repository.getPopularMovies()).thenReturn((MovieResponse(movieListDTO)))
 
         viewModel = SearchScreenViewModel(repository, mockContext)
 
@@ -92,7 +92,7 @@ class SearchScreenViewModelTest {
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain() // Reset Main dispatcher to the original Main dispatcher
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -100,13 +100,15 @@ class SearchScreenViewModelTest {
 
         setup()
 
-        `when`(repository.getPopularMovies()).thenReturn(Response.success(MovieResponse(movieListDTO)))
+        `when`(repository.getPopularMovies()).thenReturn((MovieResponse(movieListDTO)))
 
         viewModel.filtered.observeForever { }
 
         viewModel.loadMovies()
 
-        assertEquals(movieList, viewModel.filtered.value)
+        advanceUntilIdle()
+
+        assertEquals(movieListDTO, viewModel.filtered.value)
 
     }
 
@@ -125,20 +127,24 @@ class SearchScreenViewModelTest {
     }
 
     @Test
-    fun `test filterMovies with query`() = runTest {
+    fun `test filterMovies with query2`() = runTest {
         setup()
 
-        viewModel.filtered.observeForever {  }
+        `when`(repository.getPopularMovies()).thenReturn(MovieResponse(movieListDTO))
+
+        val filteredObserver = mock(Observer::class.java) as Observer<List<MovieDTO>>
+        viewModel.filtered.observeForever(filteredObserver)
 
         viewModel.loadMovies()
 
         viewModel.filterMovies("Godfather")
 
+        advanceUntilIdle()
+
         val filteredMovies = viewModel.filtered.value
         assertNotNull(filteredMovies)
         assertEquals(1, filteredMovies?.size)
         assertTrue(filteredMovies?.any { it.movieName.contains("Godfather", ignoreCase = true) } == true)
-
     }
 
     @Test
@@ -147,7 +153,7 @@ class SearchScreenViewModelTest {
 
         viewModel.filtered.observeForever {  }
 
-        viewModel.filterMovies("")
+        viewModel.filterMovies(" ")
         advanceUntilIdle()
 
         val filteredMovies = viewModel.filtered.value

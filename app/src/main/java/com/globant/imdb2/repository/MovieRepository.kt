@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class MovieRepository  @Inject constructor(private val apiService: MovieServices, private val movieDao: MovieDao){
 
-    fun getPopularMovies(): Response<MovieResponse> {
-        return apiService.getTopMovies().execute()
+    suspend fun getPopularMovies(): MovieResponse {
+        return apiService.getTopMovies()
     }
 
      fun getMovieById(id: String): Response<MovieDetail>{

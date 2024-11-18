@@ -6,6 +6,7 @@ import com.globant.imdb2.database.LocalDatabase
 import com.globant.imdb2.database.dao.MovieDao
 import com.globant.imdb2.database.dao.UserDao
 import com.globant.imdb2.services.MovieServices
+import com.globant.imdb2.utils.CryptoUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,5 +56,10 @@ object AppModule {
     fun provideMovieDao(db: LocalDatabase): MovieDao {
         return db.getMovieDao()
 
+    }
+
+    @Provides
+    fun provideCryptoUtils(): CryptoUtils {
+        return CryptoUtils() // Return a new instance of CryptoUtils
     }
 }

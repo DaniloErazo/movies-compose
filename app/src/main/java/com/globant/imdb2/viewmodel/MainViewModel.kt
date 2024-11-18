@@ -32,10 +32,11 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
 
             if(isInternetAvailable(context)){
                 val response = repository.getPopularMovies()
-                response.body()?.results?.let { movies ->
-                    repository.saveLocalMovies(movies.map { it.toEntity() })
+                response.let { movies ->
+                    val saveMovies = movies.results.map {it.toEntity()}
+                    repository.saveLocalMovies(saveMovies)
+                    _movies.postValue(movies.results)
                 }
-                _movies.postValue(response.body()?.results)
             }else{
                 _movies.postValue(repository.getLocalMovies().map { it.toMovieDTO() })
             }

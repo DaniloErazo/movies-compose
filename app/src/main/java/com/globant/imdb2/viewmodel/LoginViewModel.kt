@@ -2,6 +2,7 @@ package com.globant.imdb2.viewmodel
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +20,10 @@ import java.util.Base64
 import kotlin.random.Random
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val userRepository: UserRepository, @ApplicationContext context: Context): ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    @ApplicationContext context: Context,
+    private val cryptoUtils: CryptoUtils): ViewModel() {
 
     var loggedUser = MutableLiveData<AuthState>()
     var errorLogin = MutableLiveData<String>()
@@ -32,12 +36,13 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
 
     fun signInUser(email: String, password: String) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch() {
 
             try {
                 val user = userRepository.getUserByEmail(email)
                 val salt = Base64.getDecoder().decode(user.salt)
-                if(CryptoUtils.checkPassword(password, user.password, salt)){
+                if(cryptoUtils.checkPassword(password, user.password, salt)){
+                    System.out.println("pass verification")
                     loggedUser.postValue(AuthState(true, user))
                     sharedPreferences.edit().apply{
                         putString("username", user.email)
@@ -60,7 +65,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
 
     fun signUpUser(email: String, name: String, password: String) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch() {
 
             try {
                 val user = userRepository.getUserByEmail(email)
@@ -72,8 +77,8 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
                 }
 
             } catch (e: Exception) {
-                val salt = CryptoUtils.generateSalt()
-                val hashedPassword = CryptoUtils.hashPassword(password, salt)
+                val salt = cryptoUtils.generateSalt()
+                val hashedPassword = cryptoUtils.hashPassword(password, salt)
                 val saveableSalt = Base64.getEncoder().encodeToString(salt)
                 val avatarColor = generateRandomColor()
                 val newUSer = User(
@@ -84,8 +89,9 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
                     color = avatarColor)
 
                 userRepository.addUser(newUSer)
+                loggedUser.postValue(AuthState(true, newUSer))
+
                 withContext(Dispatchers.Main) {
-                    loggedUser.postValue(AuthState(true, newUSer))
                 }
             }
 
@@ -125,7 +131,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
         }
     }
 
-    private fun generateRandomColor(): Int {
+    fun generateRandomColor(): Int {
         val red = Random.nextInt(256)
         val green = Random.nextInt(256)
         val blue = Random.nextInt(256)

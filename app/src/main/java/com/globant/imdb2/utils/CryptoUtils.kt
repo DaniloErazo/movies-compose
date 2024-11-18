@@ -8,16 +8,16 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-object CryptoUtils {
+class CryptoUtils {
 
-    private const val ALGORITHM = "AES"
-    private const val TRANSFORMATION = "AES/CBC/PKCS5Padding"
-    private const val IV_SIZE = 16
-    private const val SECRET_KEY = "tK5UTui+DPh8lIlBxya5XVsmeDCoUl6vHhdIESMB6sQ="
+    private val ALGORITHM = "AES"
+    private val TRANSFORMATION = "AES/CBC/PKCS5Padding"
+    private val IV_SIZE = 16
+    private val SECRET_KEY = "tK5UTui+DPh8lIlBxya5XVsmeDCoUl6vHhdIESMB6sQ="
 
-    private const val ITERATION_COUNT = 65536
-    private const val KEY_LENGTH = 256
-    private const val SALT_SIZE = 16
+    private val ITERATION_COUNT = 65536
+    private val KEY_LENGTH = 256
+    private val SALT_SIZE = 16
 
 
     fun generateIv(): ByteArray {

@@ -26,8 +26,8 @@ class SearchScreenViewModel @Inject constructor(private val repository: MovieRep
 
             if(isInternetAvailable(context)){
                 val response = repository.getPopularMovies()
-                _movies.postValue(response.body()?.results)
-                filtered.postValue(response.body()?.results)
+                _movies.postValue(response.results)
+                filtered.postValue(response.results)
                 dataFetched.postValue(true)
             }else{
                 val movies = repository.getLocalMovies().map { it.toMovieDTO() }
