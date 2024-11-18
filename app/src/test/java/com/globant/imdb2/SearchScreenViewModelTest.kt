@@ -68,10 +68,10 @@ class SearchScreenViewModelTest {
 
         viewModel = SearchScreenViewModel(repository, mockContext)
 
-        Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
     private suspend fun setupNoConnection(){
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         val mockContext = mock(Context::class.java)
         val mockConnectivityManager = mock(ConnectivityManager::class.java)
 
@@ -86,8 +86,6 @@ class SearchScreenViewModelTest {
         `when`(repository.getLocalMovies()).thenReturn(movieList)
 
         viewModel = SearchScreenViewModel(repository, mockContext)
-
-        Dispatchers.setMain(UnconfinedTestDispatcher())
 
     }
 

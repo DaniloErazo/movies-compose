@@ -103,8 +103,6 @@ class LoginViewModelTest {
 
         viewModel.signInUser(testEmail, testPassword)
 
-        advanceUntilIdle()
-
         verify(observer).onChanged(AuthState(true, testUser))
         verify(editor).putString("username", testEmail)
         verify(editor).putBoolean("is_logged_in", true)
@@ -136,8 +134,6 @@ class LoginViewModelTest {
         viewModel.errorLogin.observeForever(errorLoginObserver)
 
         viewModel.signUpUser(testEmail, "Test User", testPassword)
-
-        advanceUntilIdle()
 
         verify(errorLoginObserver).onChanged("El correo ya se encuentra registrado, por favor inicia sesión")
     }
