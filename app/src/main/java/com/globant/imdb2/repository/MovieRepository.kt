@@ -5,7 +5,6 @@ import com.globant.imdb2.database.entities.Movie
 import com.globant.imdb2.entity.MovieDetail
 import com.globant.imdb2.entity.MovieResponse
 import com.globant.imdb2.services.MovieServices
-import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -23,7 +22,7 @@ class MovieRepository  @Inject constructor(private val apiService: MovieServices
         return movieDao.getAllMovies()
     }
 
-    suspend fun saveLocalMovies(items: List<Movie>): Unit{
+    suspend fun saveLocalMovies(items: List<Movie>){
         movieDao.deleteAll()
         return movieDao.saveAll(items)
     }

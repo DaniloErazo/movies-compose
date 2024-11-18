@@ -9,23 +9,18 @@ import com.globant.imdb2.database.entities.Movie
 import com.globant.imdb2.entity.MovieDTO
 import com.globant.imdb2.entity.MovieResponse
 import com.globant.imdb2.repository.MovieRepository
-import com.globant.imdb2.utils.NetworkUtils
 import com.globant.imdb2.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)

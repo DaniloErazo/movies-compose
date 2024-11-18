@@ -11,7 +11,6 @@ import com.globant.imdb2.services.MovieServices
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.test.runTest
-import retrofit2.Response
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

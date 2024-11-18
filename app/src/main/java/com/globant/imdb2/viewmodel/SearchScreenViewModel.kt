@@ -10,7 +10,6 @@ import com.globant.imdb2.repository.MovieRepository
 import com.globant.imdb2.utils.NetworkUtils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

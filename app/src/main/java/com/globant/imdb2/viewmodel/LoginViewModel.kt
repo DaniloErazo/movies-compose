@@ -2,7 +2,6 @@ package com.globant.imdb2.viewmodel
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -111,6 +110,7 @@ class LoginViewModel @Inject constructor(
                 val user = userRepository.getUserByEmail(email)
                 loggedUser.postValue(AuthState(true, user))
             }catch (e: Exception){
+                //
             }
         }
     }

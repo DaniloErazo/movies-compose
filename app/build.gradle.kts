@@ -77,15 +77,15 @@ dependencies {
 
     //Test
 
-    testImplementation("junit:junit:4.13")
-    testImplementation("org.mockito:mockito-core:5.2.1")
-    testImplementation("org.mockito:mockito-inline:5.1.1")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation(libs.junit.v413)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
 
-    testImplementation ("org.mockito:mockito-inline:5.2.0")
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
-    testImplementation ("org.robolectric:robolectric:4.8")
+    testImplementation (libs.mockito.inline.v520)
+    testImplementation (libs.androidx.core.testing)
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.robolectric)
 
 
     implementation(libs.androidx.constraintlayout.compose)
