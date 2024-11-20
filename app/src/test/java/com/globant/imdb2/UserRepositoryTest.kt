@@ -1,8 +1,8 @@
 package com.globant.imdb2
 
-import com.globant.imdb2.database.dao.UserDao
-import com.globant.imdb2.database.entities.User
-import com.globant.imdb2.repository.UserRepository
+import com.globant.imdb2.data.database.dao.UserDao
+import com.globant.imdb2.data.database.entities.UserDB
+import com.globant.imdb2.data.network.repository.UserRepository
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.runBlocking
@@ -16,7 +16,7 @@ class UserRepositoryTest {
     private lateinit var userRepository: UserRepository
 
     private val testEmail = "test@example.com"
-    private val testUser = User(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
+    private val testUser = UserDB(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
 
     @Before
     fun setup() {

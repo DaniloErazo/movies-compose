@@ -2,10 +2,10 @@ package com.globant.imdb2.di
 
 import android.content.Context
 import androidx.room.Room
-import com.globant.imdb2.database.LocalDatabase
-import com.globant.imdb2.database.dao.MovieDao
-import com.globant.imdb2.database.dao.UserDao
-import com.globant.imdb2.services.MovieServices
+import com.globant.imdb2.data.database.LocalDatabase
+import com.globant.imdb2.data.database.dao.MovieDao
+import com.globant.imdb2.data.database.dao.UserDao
+import com.globant.imdb2.data.network.services.MovieServices
 import com.globant.imdb2.utils.CryptoUtils
 import dagger.Module
 import dagger.Provides

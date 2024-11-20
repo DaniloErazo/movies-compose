@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.globant.imdb2.database.entities.User
-import com.globant.imdb2.entity.AuthState
-import com.globant.imdb2.repository.UserRepository
+import com.globant.imdb2.data.database.entities.UserDB
+import com.globant.imdb2.presentation.model.AuthState
+import com.globant.imdb2.data.network.repository.UserRepository
+import com.globant.imdb2.presentation.model.UserDTO
 import com.globant.imdb2.utils.CryptoUtils
-import com.globant.imdb2.viewmodel.LoginViewModel
+import com.globant.imdb2.presentation.viewmodel.LoginViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,11 +58,13 @@ class LoginViewModelTest {
 
 
     private val testEmail = "test@example.com"
+    private val testName = "Test user"
     private val testPassword = "password"
     private val testSaltByte = Base64.getDecoder().decode("salt".toByteArray())
     private val testSaltString = Base64.getEncoder().encodeToString("salt".toByteArray())
     private val testHashedPassword = "hashedPassword"
-    private val testUser = User(email = testEmail, name = "Test User", password = testHashedPassword, salt = testSaltString, color = 0)
+    private val testUser = UserDB(email = testEmail, name = testName, password = testHashedPassword, salt = testSaltString, color = 0)
+    private val testUserDTO = UserDTO(id = 0, email= testEmail, name = testName, color = 0 )
 
     @Before
     fun setup() {
@@ -92,7 +95,7 @@ class LoginViewModelTest {
 
         viewModel.signInUser(testEmail, testPassword)
 
-        verify(observer).onChanged(AuthState(true, testUser))
+        verify(observer).onChanged(AuthState(true, testUserDTO))
         verify(editor).putString("username", testEmail)
         verify(editor).putBoolean("is_logged_in", true)
         verify(editor).apply()
@@ -169,7 +172,7 @@ class LoginViewModelTest {
 
         viewModel.loadCurrentUser()
 
-        verify(loggedUserObserver).onChanged(AuthState(true, testUser))
+        verify(loggedUserObserver).onChanged(AuthState(true, testUserDTO))
     }
 
 }
