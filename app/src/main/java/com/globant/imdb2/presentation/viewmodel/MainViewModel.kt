@@ -11,6 +11,7 @@ import com.globant.imdb2.presentation.model.MovieDetailDTO
 import com.globant.imdb2.utils.NetworkUtils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +23,8 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
 
     private var _movie = MutableLiveData<MovieDetailDTO>()
     val movie = _movie
+
+    var dataFetched = MutableLiveData(false)
 
 
     fun loadMovies(){
@@ -36,6 +39,7 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
             }else{
                 _movies.postValue(repository.getLocalMovies().map { it.toDTO()})
             }
+            dataFetched.postValue(true)
 
         }
     }
@@ -45,7 +49,6 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
             val response = repository.getMovieById(id)
             _movie.postValue(response.toDTO())
         }
-
     }
 
 

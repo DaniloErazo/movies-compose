@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +35,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.globant.imdb2.R
 import com.globant.imdb2.data.network.model.MovieAPI
 import com.globant.imdb2.presentation.model.MovieDTO
@@ -55,15 +62,44 @@ fun HomeScreen(navController: NavController, viewmodel: MainViewModel = hiltView
 
         val items = viewmodel.movies.observeAsState()
 
+        val loaded = viewmodel.dataFetched.observeAsState()
+
         LaunchedEffect(key1 = Unit) {
             viewmodel.loadMovies()
         }
 
-        items.value?.let {
-            Trailer(movie = it.first())
-            Carousel(title = "La mejor selección", movies = it.drop(1), navController)
+        if(loaded.value == false){
+            Box(modifier = Modifier.fillMaxSize()){
+                Animation(modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.Center))
+            }
+        }else {
+            items.value?.let {
+                Trailer(movie = it.first())
+                Carousel(title = "La mejor selección", movies = it.drop(1), navController)
+            }
         }
     }
+}
+
+@Composable
+fun Animation(modifier: Modifier){
+    val preloaderLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.animationload)
+    )
+
+    val preloaderProgress by animateLottieCompositionAsState(
+        preloaderLottieComposition,
+        iterations = LottieConstants.IterateForever,
+        isPlaying = true
+    )
+
+    LottieAnimation(
+        composition = preloaderLottieComposition,
+        progress = preloaderProgress,
+        modifier = modifier
+    )
 }
 
 

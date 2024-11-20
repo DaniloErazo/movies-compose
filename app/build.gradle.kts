@@ -75,6 +75,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Animations
+
+    implementation("com.airbnb.android:lottie-compose:4.0.0")
+
+
+
     //Test
 
     testImplementation(libs.junit.v413)
