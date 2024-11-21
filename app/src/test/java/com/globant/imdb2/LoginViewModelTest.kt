@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.globant.imdb2.data.database.entities.UserDB
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
+import com.globant.imdb2.domain.model.User
 import com.globant.imdb2.presentation.model.UserDTO
 import com.globant.imdb2.utils.CryptoUtils
 import com.globant.imdb2.presentation.viewmodel.LoginViewModel
@@ -63,7 +63,7 @@ class LoginViewModelTest {
     private val testSaltByte = Base64.getDecoder().decode("salt".toByteArray())
     private val testSaltString = Base64.getEncoder().encodeToString("salt".toByteArray())
     private val testHashedPassword = "hashedPassword"
-    private val testUser = UserDB(email = testEmail, name = testName, password = testHashedPassword, salt = testSaltString, color = 0)
+    private val testUser = User(id= 0, email = testEmail, name = testName, password = testHashedPassword, salt = testSaltString, color = 0)
     private val testUserDTO = UserDTO(id = 0, email= testEmail, name = testName, color = 0 )
 
     @Before

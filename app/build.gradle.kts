@@ -77,7 +77,7 @@ dependencies {
 
     //Animations
 
-    implementation("com.airbnb.android:lottie-compose:4.0.0")
+    implementation(libs.lottie.compose)
 
 
 

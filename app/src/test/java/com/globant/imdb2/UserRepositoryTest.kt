@@ -3,6 +3,7 @@ package com.globant.imdb2
 import com.globant.imdb2.data.database.dao.UserDao
 import com.globant.imdb2.data.database.entities.UserDB
 import com.globant.imdb2.data.network.repository.UserRepository
+import com.globant.imdb2.domain.model.User
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.runBlocking
@@ -16,7 +17,9 @@ class UserRepositoryTest {
     private lateinit var userRepository: UserRepository
 
     private val testEmail = "test@example.com"
-    private val testUser = UserDB(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
+    private val testUser = User(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
+    private val testUserDB = UserDB(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
+
 
     @Before
     fun setup() {
@@ -28,7 +31,7 @@ class UserRepositoryTest {
 
     @Test
     fun `test getUserByEmail returns user when found`(): Unit = runBlocking {
-        `when`(userDao.getUserByEmail(testEmail)).thenReturn(testUser)
+        `when`(userDao.getUserByEmail(testEmail)).thenReturn(testUserDB)
 
         val result = userRepository.getUserByEmail(testEmail)
 
@@ -41,6 +44,6 @@ class UserRepositoryTest {
     fun `test addUser adds user to the database`() = runBlocking {
         userRepository.addUser(testUser)
 
-        verify(userDao).addUser(testUser)
+        verify(userDao).addUser(testUserDB)
     }
 }

@@ -2,6 +2,7 @@ package com.globant.imdb2.data.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.globant.imdb2.domain.model.User
 import com.globant.imdb2.presentation.model.UserDTO
 
 @Entity(tableName = "users")
@@ -27,5 +28,16 @@ fun UserDB.toDTO(): UserDTO {
         email = this.email,
         name = this.name,
         color = this.color
+    )
+}
+
+fun UserDB.toDomain() : User {
+    return User(
+        id = id,
+        email = email,
+        name = name,
+        password = password,
+        salt = salt,
+        color = color
     )
 }

@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.data.database.entities.UserDB
 import com.globant.imdb2.data.database.entities.toDTO
+import com.globant.imdb2.data.database.entities.toDomain
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
+import com.globant.imdb2.domain.model.toDTO
 import com.globant.imdb2.utils.CryptoUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -87,7 +89,7 @@ class LoginViewModel @Inject constructor(
                     salt = saveableSalt,
                     color = avatarColor)
 
-                userRepository.addUser(newUSer)
+                userRepository.addUser(newUSer.toDomain())
                 loggedUser.postValue(AuthState(true, newUSer.toDTO()))
 
             }
@@ -129,7 +131,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun generateRandomColor(): Int {
+    private fun generateRandomColor(): Int {
         val red = Random.nextInt(256)
         val green = Random.nextInt(256)
         val blue = Random.nextInt(256)
