@@ -6,11 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.data.database.entities.UserDB
-import com.globant.imdb2.data.database.entities.toDTO
 import com.globant.imdb2.data.database.entities.toDomain
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
-import com.globant.imdb2.domain.model.toDTO
 import com.globant.imdb2.utils.CryptoUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -44,7 +42,7 @@ class LoginViewModel @Inject constructor(
                 val user = userRepository.getUserByEmail(email)
                 val salt = Base64.getDecoder().decode(user.salt)
                 if(cryptoUtils.checkPassword(password, user.password, salt)){
-                    loggedUser.postValue(AuthState(true, user.toDTO()))
+                    loggedUser.postValue(AuthState(true, user))
                     sharedPreferences.edit().apply{
                         putString("username", user.email)
                         putBoolean("is_logged_in", true)
@@ -90,7 +88,7 @@ class LoginViewModel @Inject constructor(
                     color = avatarColor)
 
                 userRepository.addUser(newUSer.toDomain())
-                loggedUser.postValue(AuthState(true, newUSer.toDTO()))
+                loggedUser.postValue(AuthState(true, newUSer.toDomain()))
 
             }
 
@@ -111,7 +109,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch{
             try {
                 val user = userRepository.getUserByEmail(email)
-                loggedUser.postValue(AuthState(true, user.toDTO()))
+                loggedUser.postValue(AuthState(true, user))
             }catch (e: Exception){
                 //
             }
@@ -123,7 +121,7 @@ class LoginViewModel @Inject constructor(
             try {
                 val email = sharedPreferences.getString("username", "")
                 val user = userRepository.getUserByEmail(email!!)
-                loggedUser.postValue(AuthState(true, user.toDTO()))
+                loggedUser.postValue(AuthState(true, user))
 
             }catch (e: Exception){
                 //

@@ -4,7 +4,6 @@ import com.globant.imdb2.data.database.entities.MovieDB
 import com.globant.imdb2.domain.model.Genre
 import com.globant.imdb2.domain.model.Movie
 import com.globant.imdb2.domain.model.MovieDetail
-import com.globant.imdb2.presentation.model.MovieDTO
 import com.google.gson.annotations.SerializedName
 
 data class MovieAPI(
@@ -24,17 +23,6 @@ data class MovieAPI(
 
 fun MovieAPI.toDB(): MovieDB {
     return MovieDB(
-        identifier = this.identifier,
-        movieName = this.movieName,
-        backImage = this.backImage,
-        movieImage = this.movieImage,
-        movieDate = this.movieDate,
-        score = this.score
-    )
-}
-
-fun MovieAPI.toDTO(): MovieDTO{
-    return MovieDTO(
         identifier = this.identifier,
         movieName = this.movieName,
         backImage = this.backImage,

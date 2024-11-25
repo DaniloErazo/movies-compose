@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.data.network.repository.MovieRepository
-import com.globant.imdb2.domain.model.toDTO
-import com.globant.imdb2.presentation.model.MovieDTO
-import com.globant.imdb2.presentation.model.MovieDetailDTO
+import com.globant.imdb2.domain.model.Movie
+import com.globant.imdb2.domain.model.MovieDetail
+
 import com.globant.imdb2.utils.NetworkUtils.isInternetAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,10 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: MovieRepository, @ApplicationContext private val context: Context): ViewModel() {
 
-    private var _movies = MutableLiveData<List<MovieDTO>>()
+    private var _movies = MutableLiveData<List<Movie>>()
     val movies = _movies
 
-    private var _movie = MutableLiveData<MovieDetailDTO>()
+    private var _movie = MutableLiveData<MovieDetail>()
     val movie = _movie
 
     var dataFetched = MutableLiveData(false)
@@ -34,10 +34,10 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
                 val response = repository.getPopularMovies()
                 response.let { movies ->
                     repository.saveLocalMovies(movies)
-                    _movies.postValue(movies.map {it.toDTO()})
+                    _movies.postValue(movies)
                 }
             }else{
-                _movies.postValue(repository.getLocalMovies().map { it.toDTO()})
+                _movies.postValue(repository.getLocalMovies())
             }
             dataFetched.postValue(true)
 
@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(private val repository: MovieRepository,
     fun loadMovie(id: String){
         viewModelScope.launch {
             val response = repository.getMovieById(id)
-            _movie.postValue(response.toDTO())
+            _movie.postValue(response)
         }
     }
 

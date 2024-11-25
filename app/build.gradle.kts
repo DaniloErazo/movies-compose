@@ -100,6 +100,11 @@ dependencies {
 
     implementation (libs.androidx.runtime.livedata)
 
+    //Datastore
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
 
     //Hilt
     implementation(libs.dagger.hilt.android)

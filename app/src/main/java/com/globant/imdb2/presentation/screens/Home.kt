@@ -47,8 +47,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.globant.imdb2.R
-import com.globant.imdb2.data.network.model.MovieAPI
-import com.globant.imdb2.presentation.model.MovieDTO
+import com.globant.imdb2.domain.model.Movie
 import com.globant.imdb2.presentation.viewmodel.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.util.Locale
@@ -105,7 +104,7 @@ fun Animation(modifier: Modifier){
 
 
 @Composable
-fun Carousel(title: String, movies: List<MovieDTO>, navController: NavController){
+fun Carousel(title: String, movies: List<Movie>, navController: NavController){
     Column(modifier = Modifier
         .fillMaxWidth()
         .background(Color.White)){
@@ -142,7 +141,7 @@ fun Carousel(title: String, movies: List<MovieDTO>, navController: NavController
 
 
 @Composable
-fun Trailer(movie: MovieDTO){
+fun Trailer(movie: Movie){
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
         .height(300.dp)
@@ -169,7 +168,7 @@ fun Trailer(movie: MovieDTO){
             .constrainAs(poster) {
                 bottom.linkTo(parent.bottom)
             }){
-            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.movieImage,
+            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.name,
                 contentScale = ContentScale.Crop,
                 contentDescription = "movie poster",
                 modifier = Modifier
@@ -190,7 +189,7 @@ fun Trailer(movie: MovieDTO){
                 bottom.linkTo(poster.bottom)
             }){
 
-            Text(text=movie.movieName, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp))
+            Text(text=movie.name, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp))
             Text(text = "Trailer oficial")
 
         }
@@ -200,9 +199,9 @@ fun Trailer(movie: MovieDTO){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieCard(movie: MovieDTO, navController: NavController){
+fun MovieCard(movie: Movie, navController: NavController){
     Card(onClick = {
-        navController.navigate("detail/${movie.identifier}")},
+        navController.navigate("detail/${movie.id}")},
         shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomEnd = 5.dp, bottomStart = 5.dp), elevation = 5.dp,
         modifier = Modifier
             .height(240.dp)
@@ -211,7 +210,7 @@ fun MovieCard(movie: MovieDTO, navController: NavController){
 
             Column(modifier = Modifier.fillMaxWidth()){
 
-                GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.movieImage,
+                GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.image,
                     contentScale = ContentScale.Crop,
                     contentDescription = "movie poster",
                     modifier = Modifier
@@ -245,7 +244,7 @@ fun MovieCard(movie: MovieDTO, navController: NavController){
                 }
 
                 Text(
-                    text = movie.movieName,
+                    text = movie.name,
                     fontSize = 13.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

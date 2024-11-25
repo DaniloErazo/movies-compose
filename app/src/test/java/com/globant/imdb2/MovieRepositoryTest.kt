@@ -11,7 +11,6 @@ import com.globant.imdb2.data.network.services.MovieServices
 import com.globant.imdb2.domain.model.Genre
 import com.globant.imdb2.domain.model.Movie
 import com.globant.imdb2.domain.model.MovieDetail
-import com.globant.imdb2.presentation.model.GenreDTO
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.test.runTest

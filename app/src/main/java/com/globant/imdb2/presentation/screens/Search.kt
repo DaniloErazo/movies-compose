@@ -77,7 +77,7 @@ fun SearchScreen(viewmodel: SearchScreenViewModel = hiltViewModel(), navControll
 
         LazyColumn(modifier = Modifier.padding(top = 10.dp)) {
             items(filteredItems){ movie ->
-                MovieCard(image = movie.movieImage, title = movie.movieName, date = movie.movieDate, id = movie.identifier, navController)
+                MovieCard(image = movie.image, title = movie.name, date = movie.date, id = movie.id, navController)
             }
 
         }

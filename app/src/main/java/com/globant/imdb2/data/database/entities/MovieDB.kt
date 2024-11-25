@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.globant.imdb2.domain.model.Movie
-import com.globant.imdb2.presentation.model.MovieDTO
 
 @Entity(tableName = "movies")
 data class MovieDB (
@@ -21,17 +20,6 @@ data class MovieDB (
     @ColumnInfo(name = "score")
     val score: Double
 )
-
-fun MovieDB.toDTO(): MovieDTO{
-    return MovieDTO(
-        identifier = this.identifier,
-        movieName = this.movieName,
-        backImage = this.backImage,
-        movieImage = this.movieImage,
-        movieDate = this.movieDate,
-        score = this.score
-    )
-}
 
 fun MovieDB.toDomain() : Movie {
     return Movie(

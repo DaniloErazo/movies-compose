@@ -52,7 +52,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.globant.imdb2.R
-import com.globant.imdb2.presentation.model.MovieDetailDTO
+import com.globant.imdb2.domain.model.MovieDetail
 import com.globant.imdb2.presentation.viewmodel.MainViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -73,7 +73,7 @@ fun DetailScreen(navController: NavController, movieId: String, viewmodel: MainV
             // Show loading or empty state
             Log.d("HERE", "Loading movie data...")
         }
-        is MovieDetailDTO -> {
+        is MovieDetail -> {
             Scaffold(modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),

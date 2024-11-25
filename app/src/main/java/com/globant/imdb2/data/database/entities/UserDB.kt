@@ -3,7 +3,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.globant.imdb2.domain.model.User
-import com.globant.imdb2.presentation.model.UserDTO
 
 @Entity(tableName = "users")
 data class UserDB(
@@ -21,15 +20,6 @@ data class UserDB(
     @ColumnInfo(name = "avatar_color")
     val color: Int
 )
-
-fun UserDB.toDTO(): UserDTO {
-    return UserDTO(
-        id = this.id,
-        email = this.email,
-        name = this.name,
-        color = this.color
-    )
-}
 
 fun UserDB.toDomain() : User {
     return User(

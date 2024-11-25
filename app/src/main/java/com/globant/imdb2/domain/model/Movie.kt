@@ -1,7 +1,6 @@
 package com.globant.imdb2.domain.model
 
 import com.globant.imdb2.data.database.entities.MovieDB
-import com.globant.imdb2.presentation.model.MovieDTO
 
 data class Movie(
     val id: String,
@@ -24,14 +23,4 @@ fun Movie.toDB(): MovieDB {
     )
 }
 
-fun Movie.toDTO(): MovieDTO {
-    return MovieDTO(
-        identifier = this.id,
-        movieName = this.name,
-        backImage = this.backImage,
-        movieImage = this.image,
-        movieDate = this.date,
-        score = this.score
-    )
-}
 

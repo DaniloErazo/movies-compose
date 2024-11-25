@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
 import com.globant.imdb2.domain.model.User
-import com.globant.imdb2.presentation.model.UserDTO
 import com.globant.imdb2.utils.CryptoUtils
 import com.globant.imdb2.presentation.viewmodel.LoginViewModel
 import junit.framework.TestCase.assertEquals
@@ -64,7 +63,6 @@ class LoginViewModelTest {
     private val testSaltString = Base64.getEncoder().encodeToString("salt".toByteArray())
     private val testHashedPassword = "hashedPassword"
     private val testUser = User(id= 0, email = testEmail, name = testName, password = testHashedPassword, salt = testSaltString, color = 0)
-    private val testUserDTO = UserDTO(id = 0, email= testEmail, name = testName, color = 0 )
 
     @Before
     fun setup() {
@@ -95,7 +93,7 @@ class LoginViewModelTest {
 
         viewModel.signInUser(testEmail, testPassword)
 
-        verify(observer).onChanged(AuthState(true, testUserDTO))
+        verify(observer).onChanged(AuthState(true, testUser))
         verify(editor).putString("username", testEmail)
         verify(editor).putBoolean("is_logged_in", true)
         verify(editor).apply()
@@ -172,7 +170,7 @@ class LoginViewModelTest {
 
         viewModel.loadCurrentUser()
 
-        verify(loggedUserObserver).onChanged(AuthState(true, testUserDTO))
+        verify(loggedUserObserver).onChanged(AuthState(true, testUser))
     }
 
 }
