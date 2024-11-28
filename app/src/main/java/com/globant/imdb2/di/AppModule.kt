@@ -25,7 +25,6 @@ object AppModule {
     private const val DATABASE_NAME = "local_database"
 
     @Provides
-    //@Singleton review
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -60,6 +59,6 @@ object AppModule {
 
     @Provides
     fun provideCryptoUtils(): CryptoUtils {
-        return CryptoUtils() // Return a new instance of CryptoUtils
+        return CryptoUtils()
     }
 }

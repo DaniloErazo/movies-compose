@@ -168,7 +168,7 @@ fun Trailer(movie: Movie){
             .constrainAs(poster) {
                 bottom.linkTo(parent.bottom)
             }){
-            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.name,
+            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.image,
                 contentScale = ContentScale.Crop,
                 contentDescription = "movie poster",
                 modifier = Modifier

@@ -23,6 +23,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +73,7 @@ fun SignIn(navController: NavController, viewModel: LoginViewModel = hiltViewMod
                 mutableStateOf("")
             }
 
-            val errorLogin by viewModel.errorLogin.observeAsState()
+            val errorLogin by viewModel.errorLogin.collectAsState()
             val loggedUser by viewModel.loggedUser.observeAsState()
 
             val context = LocalContext.current
@@ -81,6 +81,7 @@ fun SignIn(navController: NavController, viewModel: LoginViewModel = hiltViewMod
             LaunchedEffect(errorLogin) {
                 errorLogin?.let { message ->
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
                 }
             }
 

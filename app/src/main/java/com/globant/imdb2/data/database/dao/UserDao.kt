@@ -10,7 +10,7 @@ import com.globant.imdb2.data.database.entities.UserDB
 interface UserDao {
 
     @Query("SELECT * FROM users WHERE email = :email")
-    suspend fun getUserByEmail(email: String): UserDB
+    suspend fun getUserByEmail(email: String): UserDB?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addUser(user: UserDB)

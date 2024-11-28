@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.globant.imdb2.data.network.repository.DataStoreRepository
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
 import com.globant.imdb2.domain.model.User
@@ -12,6 +13,7 @@ import com.globant.imdb2.presentation.viewmodel.LoginViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -47,6 +49,9 @@ class LoginViewModelTest {
     private lateinit var sharedPreferences: SharedPreferences
 
     @Mock
+    private lateinit var dataStoreRepository: DataStoreRepository
+
+    @Mock
     private lateinit var editor: SharedPreferences.Editor
 
     @Mock
@@ -74,7 +79,7 @@ class LoginViewModelTest {
         `when`(sharedPreferences.getBoolean("is_logged_in", false)).thenReturn(false)
         `when`(sharedPreferences.edit()).thenReturn(editor)
 
-        viewModel = LoginViewModel(userRepository, mockContext, cryptoUtils)
+        //viewModel = LoginViewModel(userRepository, dataStoreRepository, cryptoUtils)
 
     }
 
@@ -104,15 +109,15 @@ class LoginViewModelTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(testPassword, testHashedPassword, testSaltByte)).thenReturn(false)
 
-        val errorLoginObserver = mock(Observer::class.java) as Observer<String>
+        val errorLoginObserver = mock(Observer::class.java) as FlowCollector<String?>
 
-        viewModel.errorLogin.observeForever(errorLoginObserver)
+        viewModel.errorLogin.collect(errorLoginObserver)
         viewModel.loggedUser.observeForever { }
 
         viewModel.signInUser(testEmail, testPassword)
         assertEquals(viewModel.loggedUser.value, null)
 
-        verify(errorLoginObserver).onChanged("Contraseña incorrecta")
+        verify(errorLoginObserver).emit("Contraseña incorrecta")
     }
 
     @Test
@@ -120,12 +125,12 @@ class LoginViewModelTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(false)
 
-        val errorLoginObserver = mock(Observer::class.java) as Observer<String>
-        viewModel.errorLogin.observeForever(errorLoginObserver)
+        val errorLoginObserver = mock(Observer::class.java) as FlowCollector<String?>
+        viewModel.errorLogin.collect(errorLoginObserver)
 
         viewModel.signUpUser(testEmail, "Test User", testPassword)
 
-        verify(errorLoginObserver).onChanged("El correo ya se encuentra registrado, por favor inicia sesión")
+        verify(errorLoginObserver).emit("El correo ya se encuentra registrado, por favor inicia sesión")
     }
 
     @Test

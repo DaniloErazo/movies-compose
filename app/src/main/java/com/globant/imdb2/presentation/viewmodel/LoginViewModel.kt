@@ -1,18 +1,20 @@
 package com.globant.imdb2.presentation.viewmodel
 
-import android.content.Context
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.globant.imdb2.data.database.entities.UserDB
 import com.globant.imdb2.data.database.entities.toDomain
+import com.globant.imdb2.data.network.repository.DataStoreRepository
 import com.globant.imdb2.presentation.model.AuthState
 import com.globant.imdb2.data.network.repository.UserRepository
+import com.globant.imdb2.domain.model.Response
+import com.globant.imdb2.domain.usecase.SignInUseCase
 import com.globant.imdb2.utils.CryptoUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,44 +24,35 @@ import kotlin.random.Random
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    @ApplicationContext context: Context,
+    private val dataStoreRepository: DataStoreRepository,
+    private val signInUseCase: SignInUseCase,
     private val cryptoUtils: CryptoUtils): ViewModel() {
 
     var loggedUser = MutableLiveData<AuthState>()
-    var errorLogin = MutableLiveData<String>()
-
-    private val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    var errorLogin = MutableStateFlow<String?>("")
 
     fun isLoggedIn(): Boolean {
-        return sharedPreferences.getBoolean("is_logged_in", false)
+        return dataStoreRepository.isLogged()
     }
 
     fun signInUser(email: String, password: String) {
 
         viewModelScope.launch{
 
-            try {
-                val user = userRepository.getUserByEmail(email)
-                val salt = Base64.getDecoder().decode(user.salt)
-                if(cryptoUtils.checkPassword(password, user.password, salt)){
-                    loggedUser.postValue(AuthState(true, user))
-                    sharedPreferences.edit().apply{
-                        putString("username", user.email)
-                        putBoolean("is_logged_in", true)
-                    }.apply()
-                } else {
-                    errorLogin.postValue("Contraseña incorrecta")
+            when(val result = signInUseCase(email, password)){
+                is Response.Success -> {
+                    loggedUser.postValue(AuthState(true, result.data))
                 }
-
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    println(e)
-                    errorLogin.postValue("Problemas iniciando sesión")
+                is Response.Error -> {
+                    errorLogin.value = result.message
                 }
             }
 
-
         }
+    }
+
+    fun clearError(){
+        errorLogin.value = null
     }
 
     fun signUpUser(email: String, name: String, password: String) {
@@ -71,7 +64,7 @@ class LoginViewModel @Inject constructor(
 
                 if (user.email == email) {
                     withContext(Dispatchers.Main) {
-                        errorLogin.postValue("El correo ya se encuentra registrado, por favor inicia sesión")
+                        errorLogin.value = ("El correo ya se encuentra registrado, por favor inicia sesión")
                     }
                 }
 
@@ -98,10 +91,7 @@ class LoginViewModel @Inject constructor(
     fun logOutCurrentUser(){
         viewModelScope.launch{
             loggedUser.postValue(AuthState(false, null))
-            sharedPreferences.edit().apply{
-                putString("username", "")
-                putBoolean("is_logged_in", false)
-            }.apply()
+            dataStoreRepository.logOutUser()
         }
     }
 
@@ -119,10 +109,9 @@ class LoginViewModel @Inject constructor(
     fun loadCurrentUser(){
         viewModelScope.launch{
             try {
-                val email = sharedPreferences.getString("username", "")
-                val user = userRepository.getUserByEmail(email!!)
+                val email = dataStoreRepository.getLoggedUser()
+                val user = userRepository.getUserByEmail(email)
                 loggedUser.postValue(AuthState(true, user))
-
             }catch (e: Exception){
                 //
             }
