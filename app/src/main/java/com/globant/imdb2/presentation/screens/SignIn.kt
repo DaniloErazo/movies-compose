@@ -81,6 +81,7 @@ fun SignIn(navController: NavController, viewModel: LoginViewModel = hiltViewMod
             LaunchedEffect(errorLogin) {
                 errorLogin?.let { message ->
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
                 }
             }
 

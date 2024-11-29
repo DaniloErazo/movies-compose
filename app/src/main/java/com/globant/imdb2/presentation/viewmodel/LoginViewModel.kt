@@ -26,12 +26,16 @@ class LoginViewModel @Inject constructor(
     private val cryptoUtils: CryptoUtils): ViewModel() {
 
     var loggedUser = MutableLiveData<AuthState>()
-    var errorLogin = MutableLiveData<String>()
+    var errorLogin = MutableLiveData<String?>()
 
     private val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
 
     fun isLoggedIn(): Boolean {
         return sharedPreferences.getBoolean("is_logged_in", false)
+    }
+
+    fun clearError(){
+        errorLogin.value = null
     }
 
     fun signInUser(email: String, password: String) {
