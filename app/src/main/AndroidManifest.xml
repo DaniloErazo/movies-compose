@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Imdb2"
         >
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.globant.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Imdb2">
             <intent-filter>

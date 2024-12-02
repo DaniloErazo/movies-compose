@@ -1,16 +1,16 @@
 package com.globant.imdb2
 
-import com.globant.imdb2.data.database.dao.MovieDao
-import com.globant.imdb2.data.database.entities.MovieDB
-import com.globant.imdb2.data.network.model.GenreAPI
-import com.globant.imdb2.data.network.model.MovieAPI
-import com.globant.imdb2.data.network.model.MovieDetailAPI
-import com.globant.imdb2.data.network.model.MovieResponse
-import com.globant.imdb2.data.network.repository.MovieRepository
-import com.globant.imdb2.data.network.services.MovieServices
-import com.globant.imdb2.domain.model.Genre
-import com.globant.imdb2.domain.model.Movie
-import com.globant.imdb2.domain.model.MovieDetail
+import com.globant.data.database.dao.MovieDao
+import com.globant.data.database.entities.MovieDB
+import com.globant.data.network.model.GenreAPI
+import com.globant.data.network.model.MovieAPI
+import com.globant.data.network.model.MovieDetailAPI
+import com.globant.data.network.model.MovieResponse
+import com.globant.data.network.repository.MovieRepository
+import com.globant.data.network.services.MovieServices
+import com.globant.domain.model.Genre
+import com.globant.domain.model.Movie
+import com.globant.domain.model.MovieDetail
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.test.runTest
@@ -23,25 +23,48 @@ import org.mockito.MockitoAnnotations
 class MovieRepositoryTest {
 
     @Mock
-    lateinit var mockMovieServices: MovieServices
+    lateinit var mockMovieServices: com.globant.data.network.services.MovieServices
 
     @Mock
-    lateinit var mockMovieDao: MovieDao
+    lateinit var mockMovieDao: com.globant.data.database.dao.MovieDao
 
-    lateinit var movieRepository: MovieRepository
+    lateinit var movieRepository: com.globant.data.network.repository.MovieRepository
 
-    private val fakeMovieResponse = MovieResponse(listOf(
-        MovieAPI(identifier = "1", movieName = "The Shawshank Redemption", backImage = "/path1", movieImage = "/poster1", movieDate = "1994-09-23", score = 9.3),
-        MovieAPI(identifier = "2", movieName = "The Godfather", backImage = "/path2", movieImage = "/poster2", movieDate = "1972-03-24", score = 9.2),
-        MovieAPI(identifier = "3", movieName = "The Dark Knight", backImage = "/path3", movieImage = "/poster3", movieDate = "2008-07-18", score = 9.0)
-    ))
-
-    private val genresAPI = listOf(
-        GenreAPI(name = "Drama"),
-        GenreAPI(name = "Crime")
+    private val fakeMovieResponse = com.globant.data.network.model.MovieResponse(
+        listOf(
+            com.globant.data.network.model.MovieAPI(
+                identifier = "1",
+                movieName = "The Shawshank Redemption",
+                backImage = "/path1",
+                movieImage = "/poster1",
+                movieDate = "1994-09-23",
+                score = 9.3
+            ),
+            com.globant.data.network.model.MovieAPI(
+                identifier = "2",
+                movieName = "The Godfather",
+                backImage = "/path2",
+                movieImage = "/poster2",
+                movieDate = "1972-03-24",
+                score = 9.2
+            ),
+            com.globant.data.network.model.MovieAPI(
+                identifier = "3",
+                movieName = "The Dark Knight",
+                backImage = "/path3",
+                movieImage = "/poster3",
+                movieDate = "2008-07-18",
+                score = 9.0
+            )
+        )
     )
 
-    private val fakeMovieDetail = MovieDetailAPI(
+    private val genresAPI = listOf(
+        com.globant.data.network.model.GenreAPI(name = "Drama"),
+        com.globant.data.network.model.GenreAPI(name = "Crime")
+    )
+
+    private val fakeMovieDetail = com.globant.data.network.model.MovieDetailAPI(
         identifier = "1",
         movieName = "The Godfather",
         movieImage = "/path/to/poster1.jpg",
@@ -52,11 +75,11 @@ class MovieRepositoryTest {
     )
 
     val genres = listOf(
-        Genre("Drama"),
-        Genre("Crime")
+        com.globant.domain.model.Genre("Drama"),
+        com.globant.domain.model.Genre("Crime")
     )
 
-    val mockMovieDetail = MovieDetail(
+    val mockMovieDetail = com.globant.domain.model.MovieDetail(
         identifier = "1",
         movieName = "The Godfather",
         movieImage = "/path/to/poster1.jpg",
@@ -67,15 +90,60 @@ class MovieRepositoryTest {
     )
 
     private val mockMovieList = listOf(
-        Movie(id = "1", name = "The Shawshank Redemption", originalTitle = "The Shawshank Redemption", backImage = "/path1", image = "/poster1", date = "1994-09-23", score = 9.3),
-        Movie(id = "2", name = "The Godfather", originalTitle = "The Godfather", backImage = "/path2", image = "/poster2", date = "1972-03-24", score = 9.2),
-        Movie(id = "3", name = "The Dark Knight", originalTitle = "The Dark Knight", backImage = "/path3", image = "/poster3", date = "2008-07-18", score = 9.0)
+        com.globant.domain.model.Movie(
+            id = "1",
+            name = "The Shawshank Redemption",
+            originalTitle = "The Shawshank Redemption",
+            backImage = "/path1",
+            image = "/poster1",
+            date = "1994-09-23",
+            score = 9.3
+        ),
+        com.globant.domain.model.Movie(
+            id = "2",
+            name = "The Godfather",
+            originalTitle = "The Godfather",
+            backImage = "/path2",
+            image = "/poster2",
+            date = "1972-03-24",
+            score = 9.2
+        ),
+        com.globant.domain.model.Movie(
+            id = "3",
+            name = "The Dark Knight",
+            originalTitle = "The Dark Knight",
+            backImage = "/path3",
+            image = "/poster3",
+            date = "2008-07-18",
+            score = 9.0
+        )
     )
 
     private val mockMovieDB = listOf(
-        MovieDB(identifier = "1", movieName = "The Shawshank Redemption", backImage = "/path1", movieImage = "/poster1", movieDate = "1994-09-23", score = 9.3),
-        MovieDB(identifier = "2", movieName = "The Godfather", backImage = "/path2", movieImage = "/poster2", movieDate = "1972-03-24", score = 9.2),
-        MovieDB(identifier = "3", movieName = "The Dark Knight", backImage = "/path3", movieImage = "/poster3", movieDate = "2008-07-18", score = 9.0)
+        com.globant.data.database.entities.MovieDB(
+            identifier = "1",
+            movieName = "The Shawshank Redemption",
+            backImage = "/path1",
+            movieImage = "/poster1",
+            movieDate = "1994-09-23",
+            score = 9.3
+        ),
+        com.globant.data.database.entities.MovieDB(
+            identifier = "2",
+            movieName = "The Godfather",
+            backImage = "/path2",
+            movieImage = "/poster2",
+            movieDate = "1972-03-24",
+            score = 9.2
+        ),
+        com.globant.data.database.entities.MovieDB(
+            identifier = "3",
+            movieName = "The Dark Knight",
+            backImage = "/path3",
+            movieImage = "/poster3",
+            movieDate = "2008-07-18",
+            score = 9.0
+        )
     )
 
 
@@ -83,7 +151,8 @@ class MovieRepositoryTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)  // Initialize mocks
-        movieRepository = MovieRepository(mockMovieServices, mockMovieDao)
+        movieRepository =
+            com.globant.data.network.repository.MovieRepository(mockMovieServices, mockMovieDao)
     }
 
     @Test

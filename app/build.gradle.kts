@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.room.common)
+    implementation(project(":app:domain"))
+    implementation(project(":app:data"))
+    implementation(project(":app:presentation"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,7 +82,15 @@ dependencies {
 
     implementation(libs.lottie.compose)
 
+    //Retrofit
 
+    implementation (libs.retrofit2.retrofit)
+    implementation (libs.retrofit2.converter.gson)
+
+    //Room
+    implementation(libs.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.room.compiler)
 
     //Test
 
@@ -113,10 +124,6 @@ dependencies {
     kapt(libs.hilt.android.compiler)
 
 
-
-    // Retrofit for network requests
-    implementation (libs.retrofit2.retrofit)
-    implementation (libs.retrofit2.converter.gson)
     // Coroutines for asynchronous programming
     implementation (libs.kotlinx.coroutines.android)
 
@@ -124,11 +131,6 @@ dependencies {
     implementation(libs.landscapist.glide)
 
     implementation(libs.androidx.material)
-
-    //Room
-    implementation(libs.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    kapt(libs.room.compiler)
 
 
     //Navigation

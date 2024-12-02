@@ -1,9 +1,9 @@
 package com.globant.imdb2
 
-import com.globant.imdb2.data.database.dao.UserDao
-import com.globant.imdb2.data.database.entities.UserDB
-import com.globant.imdb2.data.network.repository.UserRepository
-import com.globant.imdb2.domain.model.User
+import com.globant.data.database.dao.UserDao
+import com.globant.data.database.entities.UserDB
+import com.globant.data.network.repository.UserRepository
+import com.globant.domain.model.User
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.runBlocking
@@ -13,20 +13,34 @@ import org.mockito.Mockito.*
 
 class UserRepositoryTest {
 
-    private lateinit var userDao: UserDao
-    private lateinit var userRepository: UserRepository
+    private lateinit var userDao: com.globant.data.database.dao.UserDao
+    private lateinit var userRepository: com.globant.data.network.repository.UserRepository
 
     private val testEmail = "test@example.com"
-    private val testUser = User(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
-    private val testUserDB = UserDB(id = 1, email = testEmail, name = "Test User", password = "hashedPassword", salt = "salt", color = 123456)
+    private val testUser = com.globant.domain.model.User(
+        id = 1,
+        email = testEmail,
+        name = "Test User",
+        password = "hashedPassword",
+        salt = "salt",
+        color = 123456
+    )
+    private val testUserDB = com.globant.data.database.entities.UserDB(
+        id = 1,
+        email = testEmail,
+        name = "Test User",
+        password = "hashedPassword",
+        salt = "salt",
+        color = 123456
+    )
 
 
     @Before
     fun setup() {
 
-        userDao = mock(UserDao::class.java)
+        userDao = mock(com.globant.data.database.dao.UserDao::class.java)
 
-        userRepository = UserRepository(userDao)
+        userRepository = com.globant.data.network.repository.UserRepository(userDao)
     }
 
     @Test

@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.globant.imdb2.presentation.model.AuthState
-import com.globant.imdb2.data.network.repository.UserRepository
-import com.globant.imdb2.domain.model.User
-import com.globant.imdb2.utils.CryptoUtils
-import com.globant.imdb2.presentation.viewmodel.LoginViewModel
+import com.globant.presentation.model.AuthState
+import com.globant.data.network.repository.UserRepository
+import com.globant.domain.model.User
+import com.globant.presentation.utils.CryptoUtils
+import com.globant.presentation.viewmodel.LoginViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,10 +38,10 @@ class LoginViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: com.globant.presentation.viewmodel.LoginViewModel
 
     @Mock
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: com.globant.data.network.repository.UserRepository
 
     @Mock
     private lateinit var sharedPreferences: SharedPreferences
@@ -62,7 +62,14 @@ class LoginViewModelTest {
     private val testSaltByte = Base64.getDecoder().decode("salt".toByteArray())
     private val testSaltString = Base64.getEncoder().encodeToString("salt".toByteArray())
     private val testHashedPassword = "hashedPassword"
-    private val testUser = User(id= 0, email = testEmail, name = testName, password = testHashedPassword, salt = testSaltString, color = 0)
+    private val testUser = com.globant.domain.model.User(
+        id = 0,
+        email = testEmail,
+        name = testName,
+        password = testHashedPassword,
+        salt = testSaltString,
+        color = 0
+    )
 
     @Before
     fun setup() {
@@ -74,7 +81,11 @@ class LoginViewModelTest {
         `when`(sharedPreferences.getBoolean("is_logged_in", false)).thenReturn(false)
         `when`(sharedPreferences.edit()).thenReturn(editor)
 
-        viewModel = LoginViewModel(userRepository, mockContext, cryptoUtils)
+        viewModel = com.globant.presentation.viewmodel.LoginViewModel(
+            userRepository,
+            mockContext,
+            cryptoUtils
+        )
 
     }
 
@@ -88,12 +99,12 @@ class LoginViewModelTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(true)
 
-        val observer = mock(Observer::class.java) as Observer<AuthState>
+        val observer = mock(Observer::class.java) as Observer<com.globant.presentation.model.AuthState>
         viewModel.loggedUser.observeForever(observer)
 
         viewModel.signInUser(testEmail, testPassword)
 
-        verify(observer).onChanged(AuthState(true, testUser))
+        verify(observer).onChanged(com.globant.presentation.model.AuthState(true, testUser))
         verify(editor).putString("username", testEmail)
         verify(editor).putBoolean("is_logged_in", true)
         verify(editor).apply()
@@ -104,7 +115,7 @@ class LoginViewModelTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(testPassword, testHashedPassword, testSaltByte)).thenReturn(false)
 
-        val errorLoginObserver = mock(Observer::class.java) as Observer<String>
+        val errorLoginObserver = mock(Observer::class.java) as Observer<String?>
 
         viewModel.errorLogin.observeForever(errorLoginObserver)
         viewModel.loggedUser.observeForever { }
@@ -120,7 +131,7 @@ class LoginViewModelTest {
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
         `when`(cryptoUtils.checkPassword(any(), any(), any())).thenReturn(false)
 
-        val errorLoginObserver = mock(Observer::class.java) as Observer<String>
+        val errorLoginObserver = mock(Observer::class.java) as Observer<String?>
         viewModel.errorLogin.observeForever(errorLoginObserver)
 
         viewModel.signUpUser(testEmail, "Test User", testPassword)
@@ -148,12 +159,12 @@ class LoginViewModelTest {
 
     @Test
     fun `test logOutCurrentUser`() = runBlocking {
-        val loggedUserObserver = mock(Observer::class.java) as Observer<AuthState>
+        val loggedUserObserver = mock(Observer::class.java) as Observer<com.globant.presentation.model.AuthState>
         viewModel.loggedUser.observeForever(loggedUserObserver)
 
         viewModel.logOutCurrentUser()
 
-        verify(loggedUserObserver).onChanged(AuthState(false, null))
+        verify(loggedUserObserver).onChanged(com.globant.presentation.model.AuthState(false, null))
 
         verify(editor).putString("username", "")
         verify(editor).putBoolean("is_logged_in", false)
@@ -165,12 +176,17 @@ class LoginViewModelTest {
         `when`(sharedPreferences.getString("username", "")).thenReturn(testEmail)
         `when`(userRepository.getUserByEmail(testEmail)).thenReturn(testUser)
 
-        val loggedUserObserver = mock(Observer::class.java) as Observer<AuthState>
+        val loggedUserObserver = mock(Observer::class.java) as Observer<com.globant.presentation.model.AuthState>
         viewModel.loggedUser.observeForever(loggedUserObserver)
 
         viewModel.loadCurrentUser()
 
-        verify(loggedUserObserver).onChanged(AuthState(true, testUser))
+        verify(loggedUserObserver).onChanged(
+            com.globant.presentation.model.AuthState(
+                true,
+                testUser
+            )
+        )
     }
 
 }

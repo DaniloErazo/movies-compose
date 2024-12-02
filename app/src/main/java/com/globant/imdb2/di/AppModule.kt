@@ -2,11 +2,12 @@ package com.globant.imdb2.di
 
 import android.content.Context
 import androidx.room.Room
-import com.globant.imdb2.data.database.LocalDatabase
-import com.globant.imdb2.data.database.dao.MovieDao
-import com.globant.imdb2.data.database.dao.UserDao
-import com.globant.imdb2.data.network.services.MovieServices
-import com.globant.imdb2.utils.CryptoUtils
+import com.globant.data.database.LocalDatabase
+import com.globant.data.database.dao.MovieDao
+import com.globant.data.database.dao.UserDao
+import com.globant.data.network.repository.UserRepository
+import com.globant.data.network.services.MovieServices
+import com.globant.presentation.utils.CryptoUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,7 +60,12 @@ object AppModule {
     }
 
     @Provides
+    fun provideUserRepository(userDao: UserDao): UserRepository {
+        return UserRepository(userDao)
+    }
+
+    @Provides
     fun provideCryptoUtils(): CryptoUtils {
-        return CryptoUtils() // Return a new instance of CryptoUtils
+        return CryptoUtils()
     }
 }

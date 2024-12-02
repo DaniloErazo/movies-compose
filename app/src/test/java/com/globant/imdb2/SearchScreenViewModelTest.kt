@@ -5,9 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.globant.imdb2.data.network.repository.MovieRepository
-import com.globant.imdb2.domain.model.Movie
-import com.globant.imdb2.presentation.viewmodel.SearchScreenViewModel
+import com.globant.data.network.repository.MovieRepository
+import com.globant.domain.model.Movie
+import com.globant.presentation.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -27,15 +27,39 @@ class SearchScreenViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: SearchScreenViewModel
+    private lateinit var viewModel: com.globant.presentation.viewmodel.SearchScreenViewModel
 
     @Mock
-    private lateinit var repository: MovieRepository
+    private lateinit var repository: com.globant.data.network.repository.MovieRepository
 
     private val movieList = listOf(
-        Movie(id = "1", name = "The Shawshank Redemption", originalTitle = "The Shawshank Redemption", backImage = "/path1", image = "/poster1", date = "1994-09-23", score = 9.3),
-        Movie(id = "2", name = "The Godfather", originalTitle = "The Godfather", backImage = "/path2", image = "/poster2", date = "1972-03-24", score = 9.2),
-        Movie(id = "3", name = "The Dark Knight", originalTitle = "The Dark Knight", backImage = "/path3", image = "/poster3", date = "2008-07-18", score = 9.0)
+        com.globant.domain.model.Movie(
+            id = "1",
+            name = "The Shawshank Redemption",
+            originalTitle = "The Shawshank Redemption",
+            backImage = "/path1",
+            image = "/poster1",
+            date = "1994-09-23",
+            score = 9.3
+        ),
+        com.globant.domain.model.Movie(
+            id = "2",
+            name = "The Godfather",
+            originalTitle = "The Godfather",
+            backImage = "/path2",
+            image = "/poster2",
+            date = "1972-03-24",
+            score = 9.2
+        ),
+        com.globant.domain.model.Movie(
+            id = "3",
+            name = "The Dark Knight",
+            originalTitle = "The Dark Knight",
+            backImage = "/path3",
+            image = "/poster3",
+            date = "2008-07-18",
+            score = 9.0
+        )
     )
 
     private suspend fun setup() {
@@ -53,7 +77,8 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getPopularMovies()).thenReturn(movieList)
 
-        viewModel = SearchScreenViewModel(repository, mockContext)
+        viewModel =
+            com.globant.presentation.viewmodel.SearchScreenViewModel(repository, mockContext)
 
     }
 
@@ -72,7 +97,8 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getLocalMovies()).thenReturn(movieList)
 
-        viewModel = SearchScreenViewModel(repository, mockContext)
+        viewModel =
+            com.globant.presentation.viewmodel.SearchScreenViewModel(repository, mockContext)
 
     }
 
@@ -118,7 +144,7 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getPopularMovies()).thenReturn(movieList)
 
-        val filteredObserver = mock(Observer::class.java) as Observer<List<Movie>>
+        val filteredObserver = mock(Observer::class.java) as Observer<List<com.globant.domain.model.Movie>>
         viewModel.filtered.observeForever(filteredObserver)
 
         viewModel.loadMovies()

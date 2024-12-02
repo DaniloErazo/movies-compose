@@ -4,11 +4,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.globant.imdb2.data.network.repository.MovieRepository
-import com.globant.imdb2.domain.model.Genre
-import com.globant.imdb2.domain.model.Movie
-import com.globant.imdb2.domain.model.MovieDetail
-import com.globant.imdb2.presentation.viewmodel.MainViewModel
+import com.globant.data.network.repository.MovieRepository
+import com.globant.domain.model.Genre
+import com.globant.domain.model.Movie
+import com.globant.domain.model.MovieDetail
+import com.globant.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -28,29 +28,77 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MainViewModelTest {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: com.globant.presentation.viewmodel.MainViewModel
 
     @Mock
-    private lateinit var repository: MovieRepository
+    private lateinit var repository: com.globant.data.network.repository.MovieRepository
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
     val mockMovies = listOf(
-        Movie(id = "1", name = "The Shawshank Redemption", originalTitle = "The Shawshank Redemption" , backImage = "/path/to/backdrop1.jpg", image = "/path/to/poster1.jpg", date = "1994-09-23", score = 9.3),
-        Movie(id = "2", name = "The Godfather", originalTitle = "The Godfather", backImage = "/path/to/backdrop2.jpg", image = "/path/to/poster2.jpg", date = "1972-03-24", score = 9.2),
-        Movie(id = "3", name = "The Dark Knight", originalTitle = "The Dark Knight", backImage = "/path/to/backdrop3.jpg", image = "/path/to/poster3.jpg", date = "2008-07-18", score = 9.0),
-        Movie(id = "4", name = "Pulp Fiction", originalTitle = "Pulp Fiction", backImage = "/path/to/backdrop4.jpg", image = "/path/to/poster4.jpg", date = "1994-10-14", score = 8.9),
-        Movie(id = "5", name = "The Lord of the Rings: The Return of the King", originalTitle = "The Lord of the Rings: The Return of the King", backImage = "/path/to/backdrop5.jpg", image = "/path/to/poster5.jpg", date = "2003-12-17", score = 8.9)
+        com.globant.domain.model.Movie(
+            id = "1",
+            name = "The Shawshank Redemption",
+            originalTitle = "The Shawshank Redemption",
+            backImage = "/path/to/backdrop1.jpg",
+            image = "/path/to/poster1.jpg",
+            date = "1994-09-23",
+            score = 9.3
+        ),
+        com.globant.domain.model.Movie(
+            id = "2",
+            name = "The Godfather",
+            originalTitle = "The Godfather",
+            backImage = "/path/to/backdrop2.jpg",
+            image = "/path/to/poster2.jpg",
+            date = "1972-03-24",
+            score = 9.2
+        ),
+        com.globant.domain.model.Movie(
+            id = "3",
+            name = "The Dark Knight",
+            originalTitle = "The Dark Knight",
+            backImage = "/path/to/backdrop3.jpg",
+            image = "/path/to/poster3.jpg",
+            date = "2008-07-18",
+            score = 9.0
+        ),
+        com.globant.domain.model.Movie(
+            id = "4",
+            name = "Pulp Fiction",
+            originalTitle = "Pulp Fiction",
+            backImage = "/path/to/backdrop4.jpg",
+            image = "/path/to/poster4.jpg",
+            date = "1994-10-14",
+            score = 8.9
+        ),
+        com.globant.domain.model.Movie(
+            id = "5",
+            name = "The Lord of the Rings: The Return of the King",
+            originalTitle = "The Lord of the Rings: The Return of the King",
+            backImage = "/path/to/backdrop5.jpg",
+            image = "/path/to/poster5.jpg",
+            date = "2003-12-17",
+            score = 8.9
+        )
     )
 
     val genres = listOf(
-        Genre(name = "Drama"),
-        Genre(name = "Crime")
+        com.globant.domain.model.Genre(name = "Drama"),
+        com.globant.domain.model.Genre(name = "Crime")
     )
 
 
-    val mockMovieDetail = MovieDetail(identifier = "1", movieName = "The Godfather", movieImage = "/path/to/poster1.jpg", score = 9.2, backImage = "/path/to/backdrop1.jpg", description = "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.", genres = genres)
+    val mockMovieDetail = com.globant.domain.model.MovieDetail(
+        identifier = "1",
+        movieName = "The Godfather",
+        movieImage = "/path/to/poster1.jpg",
+        score = 9.2,
+        backImage = "/path/to/backdrop1.jpg",
+        description = "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
+        genres = genres
+    )
 
 
     @Before
@@ -67,7 +115,7 @@ class MainViewModelTest {
         `when`(mockNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
             .thenReturn(true)
 
-        viewModel = MainViewModel(repository, mockContext)
+        viewModel = com.globant.presentation.viewmodel.MainViewModel(repository, mockContext)
 
         Dispatchers.setMain(UnconfinedTestDispatcher())
     }

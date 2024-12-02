@@ -34,6 +34,10 @@ roomRuntime = "2.6.1"
 runtimeAndroid = "1.7.4"
 roomCommon = "2.6.1"
 junitJupiter = "5.8.1"
+appcompat = "1.7.0"
+materialVersion = "1.12.0"
+jetbrainsKotlinJvm = "1.9.0"
+material3Android = "1.3.1"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutComposeVersion" }
@@ -78,8 +82,13 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCom
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 
