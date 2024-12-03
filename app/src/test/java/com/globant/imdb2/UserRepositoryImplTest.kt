@@ -1,9 +1,5 @@
 package com.globant.imdb2
 
-import com.globant.data.database.dao.UserDao
-import com.globant.data.database.entities.UserDB
-import com.globant.data.network.repository.UserRepository
-import com.globant.domain.model.User
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.runBlocking
@@ -11,10 +7,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 
-class UserRepositoryTest {
+class UserRepositoryImplTest {
 
     private lateinit var userDao: com.globant.data.database.dao.UserDao
-    private lateinit var userRepository: com.globant.data.network.repository.UserRepository
+    private lateinit var userRepository: com.globant.data.network.repository.UserRepositoryImpl
 
     private val testEmail = "test@example.com"
     private val testUser = com.globant.domain.model.User(
@@ -40,7 +36,7 @@ class UserRepositoryTest {
 
         userDao = mock(com.globant.data.database.dao.UserDao::class.java)
 
-        userRepository = com.globant.data.network.repository.UserRepository(userDao)
+        userRepository = com.globant.data.network.repository.UserRepositoryImpl(userDao)
     }
 
     @Test

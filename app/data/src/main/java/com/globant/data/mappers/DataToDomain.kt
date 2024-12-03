@@ -2,6 +2,7 @@ package com.globant.data.mappers
 
 import com.globant.data.database.entities.MovieDB
 import com.globant.data.database.entities.UserDB
+import com.globant.data.network.model.MovieAPI
 import com.globant.domain.model.Movie
 import com.globant.domain.model.User
 
@@ -11,6 +12,18 @@ fun MovieDB.toDomain() : Movie {
         name = movieName,
         image = movieImage,
         backImage = backImage,
+        score = score,
+        date = movieDate,
+        originalTitle = movieName
+    )
+}
+
+fun MovieAPI.toDomain() : Movie {
+    return Movie(
+        id = identifier,
+        name = movieName,
+        image = movieImage,
+        backImage = "backImage",
         score = score,
         date = movieDate,
         originalTitle = movieName

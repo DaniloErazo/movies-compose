@@ -1,6 +1,6 @@
-package com.globant.presentation.utils
+package com.globant.domain.utils
 
-import java.util.Base64 // Import Java Base64 instead
+import java.util.Base64
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory

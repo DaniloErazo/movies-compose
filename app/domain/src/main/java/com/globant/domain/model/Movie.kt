@@ -9,6 +9,3 @@ data class Movie(
     val date: String,
     val originalTitle: String
 )
-
-
-

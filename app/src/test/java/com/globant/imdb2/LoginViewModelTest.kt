@@ -5,10 +5,7 @@ import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.globant.presentation.model.AuthState
-import com.globant.data.network.repository.UserRepository
-import com.globant.domain.model.User
-import com.globant.presentation.utils.CryptoUtils
-import com.globant.presentation.viewmodel.LoginViewModel
+import com.globant.data.utils.CryptoUtils
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +38,7 @@ class LoginViewModelTest {
     private lateinit var viewModel: com.globant.presentation.viewmodel.LoginViewModel
 
     @Mock
-    private lateinit var userRepository: com.globant.data.network.repository.UserRepository
+    private lateinit var userRepository: com.globant.data.network.repository.UserRepositoryImpl
 
     @Mock
     private lateinit var sharedPreferences: SharedPreferences

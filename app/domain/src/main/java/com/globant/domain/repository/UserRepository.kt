@@ -6,5 +6,5 @@ interface UserRepository {
 
     suspend fun getUserByEmail(email: String): User
 
-    suspend fun addUser(user: User)
+    suspend fun addUser(email: String, name: String, password: String, color: Int)
 }

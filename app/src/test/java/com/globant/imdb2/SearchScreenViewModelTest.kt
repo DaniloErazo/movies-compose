@@ -5,9 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.globant.data.network.repository.MovieRepository
-import com.globant.domain.model.Movie
-import com.globant.presentation.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -30,7 +27,7 @@ class SearchScreenViewModelTest {
     private lateinit var viewModel: com.globant.presentation.viewmodel.SearchScreenViewModel
 
     @Mock
-    private lateinit var repository: com.globant.data.network.repository.MovieRepository
+    private lateinit var repository: com.globant.data.network.repository.MovieRepositoryImpl
 
     private val movieList = listOf(
         com.globant.domain.model.Movie(

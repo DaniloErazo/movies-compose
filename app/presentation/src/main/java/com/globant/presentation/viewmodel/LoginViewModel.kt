@@ -5,11 +5,9 @@ import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.globant.data.database.entities.UserDB
-import com.globant.data.mappers.toDomain
-import com.globant.data.network.repository.UserRepository
+import com.globant.domain.repository.UserRepository
 import com.globant.presentation.model.AuthState
-import com.globant.presentation.utils.CryptoUtils
+import com.globant.data.utils.CryptoUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -81,26 +79,10 @@ class LoginViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                val salt = cryptoUtils.generateSalt()
-                val hashedPassword = cryptoUtils.hashPassword(password, salt)
-                val saveableSalt = Base64.getEncoder().encodeToString(salt)
-                val avatarColor = generateRandomColor()
-                val newUSer = UserDB(
-                    email = email,
-                    name = name,
-                    password = hashedPassword,
-                    salt = saveableSalt,
-                    color = avatarColor
-                )
 
-                userRepository.addUser(newUSer.toDomain())
-                loggedUser.postValue(
-                    AuthState(
-                        true,
-                        newUSer.toDomain()
-                    )
-                )
-
+                val color = generateRandomColor()
+                userRepository.addUser(email, name, password, color)
+                loadUser(email)
             }
 
         }

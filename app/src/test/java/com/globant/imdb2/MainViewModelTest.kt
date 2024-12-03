@@ -4,11 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.globant.data.network.repository.MovieRepository
-import com.globant.domain.model.Genre
-import com.globant.domain.model.Movie
-import com.globant.domain.model.MovieDetail
-import com.globant.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -31,7 +26,7 @@ class MainViewModelTest {
     private lateinit var viewModel: com.globant.presentation.viewmodel.MainViewModel
 
     @Mock
-    private lateinit var repository: com.globant.data.network.repository.MovieRepository
+    private lateinit var repository: com.globant.data.network.repository.MovieRepositoryImpl
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()

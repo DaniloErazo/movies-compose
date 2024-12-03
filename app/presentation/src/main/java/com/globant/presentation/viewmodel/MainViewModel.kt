@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.globant.data.network.repository.MovieRepository
 import com.globant.domain.model.Movie
 import com.globant.domain.model.MovieDetail
+import com.globant.domain.repository.MovieRepository
 import com.globant.presentation.utils.NetworkUtils.isInternetAvailable
 
 import dagger.hilt.android.lifecycle.HiltViewModel

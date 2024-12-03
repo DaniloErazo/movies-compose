@@ -1,6 +1,5 @@
 package com.globant.data.network.model
 
-import com.globant.domain.model.Movie
 import com.google.gson.annotations.SerializedName
 
 data class MovieAPI(
@@ -17,30 +16,6 @@ data class MovieAPI(
     @SerializedName("vote_average")
     val score: Double
 )
-
-fun MovieAPI.toDB(): com.globant.data.database.entities.MovieDB {
-    return com.globant.data.database.entities.MovieDB(
-        identifier = this.identifier,
-        movieName = this.movieName,
-        backImage = this.backImage,
-        movieImage = this.movieImage,
-        movieDate = this.movieDate,
-        score = this.score
-    )
-}
-
-fun MovieAPI.toMovie(): Movie {
-    return Movie(
-        id = this.identifier,
-        name = this.movieName,
-        image = this.movieImage,
-        originalTitle = this.movieName,
-        date = this.movieDate,
-        score = this.score,
-        backImage = this.backImage
-    )
-}
-
 
 data class MovieResponse(
     val results: List<MovieAPI>

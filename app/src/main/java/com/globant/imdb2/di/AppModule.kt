@@ -5,9 +5,12 @@ import androidx.room.Room
 import com.globant.data.database.LocalDatabase
 import com.globant.data.database.dao.MovieDao
 import com.globant.data.database.dao.UserDao
-import com.globant.data.network.repository.UserRepository
+import com.globant.data.network.repository.MovieRepositoryImpl
+import com.globant.data.network.repository.UserRepositoryImpl
 import com.globant.data.network.services.MovieServices
-import com.globant.presentation.utils.CryptoUtils
+import com.globant.domain.repository.MovieRepository
+import com.globant.domain.repository.UserRepository
+import com.globant.data.utils.CryptoUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,8 +63,13 @@ object AppModule {
     }
 
     @Provides
-    fun provideUserRepository(userDao: UserDao): UserRepository {
-        return UserRepository(userDao)
+    fun provideUserRepository(userDao: UserDao, cryptoUtils: CryptoUtils): UserRepository {
+        return UserRepositoryImpl(userDao, cryptoUtils)
+    }
+
+    @Provides
+    fun provideMovieRepository(movieDao: MovieDao, movieServices: MovieServices): MovieRepository {
+        return MovieRepositoryImpl(movieServices, movieDao)
     }
 
     @Provides

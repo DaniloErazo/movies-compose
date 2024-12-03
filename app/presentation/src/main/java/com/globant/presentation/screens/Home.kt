@@ -1,5 +1,6 @@
 package com.globant.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.globant.domain.model.Movie
 import com.globant.presentation.R
 import com.globant.presentation.theme.Grey
 import com.globant.presentation.theme.LightGray
@@ -142,7 +144,7 @@ fun Carousel(title: String, movies: List<com.globant.domain.model.Movie>, navCon
 
 
 @Composable
-fun Trailer(movie: com.globant.domain.model.Movie){
+fun Trailer(movie: Movie){
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
         .height(300.dp)
@@ -155,7 +157,8 @@ fun Trailer(movie: com.globant.domain.model.Movie){
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }){
-            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.backImage,
+            Log.d("HERE", movie.toString())
+            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500${movie.backImage}" ,
                 contentScale = ContentScale.Crop,
                 contentDescription = "movie trailer",
                 modifier = Modifier
@@ -169,7 +172,7 @@ fun Trailer(movie: com.globant.domain.model.Movie){
             .constrainAs(poster) {
                 bottom.linkTo(parent.bottom)
             }){
-            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.name,
+            GlideImage(imageModel = "https://image.tmdb.org/t/p/w500" + movie.image,
                 contentScale = ContentScale.Crop,
                 contentDescription = "movie poster",
                 modifier = Modifier
@@ -200,7 +203,7 @@ fun Trailer(movie: com.globant.domain.model.Movie){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieCard(movie: com.globant.domain.model.Movie, navController: NavController){
+fun MovieCard(movie: Movie, navController: NavController){
     Card(onClick = {
         navController.navigate("detail/${movie.id}")},
         shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomEnd = 5.dp, bottomStart = 5.dp), elevation = 5.dp,
