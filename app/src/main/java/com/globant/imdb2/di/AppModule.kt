@@ -10,7 +10,10 @@ import com.globant.data.network.repository.UserRepositoryImpl
 import com.globant.data.network.services.MovieServices
 import com.globant.domain.repository.MovieRepository
 import com.globant.domain.repository.UserRepository
-import com.globant.data.utils.CryptoUtils
+import com.globant.domain.usecase.LoadUserUseCase
+import com.globant.domain.usecase.SignInUseCase
+import com.globant.domain.usecase.SignUpUseCase
+import com.globant.domain.utils.CryptoUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,13 +66,28 @@ object AppModule {
     }
 
     @Provides
-    fun provideUserRepository(userDao: UserDao, cryptoUtils: CryptoUtils): UserRepository {
-        return UserRepositoryImpl(userDao, cryptoUtils)
+    fun provideUserRepository(userDao: UserDao): UserRepository {
+        return UserRepositoryImpl(userDao)
     }
 
     @Provides
     fun provideMovieRepository(movieDao: MovieDao, movieServices: MovieServices): MovieRepository {
         return MovieRepositoryImpl(movieServices, movieDao)
+    }
+
+    @Provides
+    fun provideSignInUseCase(userRepository: UserRepository, cryptoUtils: CryptoUtils): SignInUseCase{
+        return SignInUseCase(userRepository, cryptoUtils)
+    }
+
+    @Provides
+    fun provideSignUpUseCase(userRepository: UserRepository, cryptoUtils: CryptoUtils): SignUpUseCase{
+        return SignUpUseCase(userRepository, cryptoUtils)
+    }
+
+    @Provides
+    fun provideLoadUserUseCase(userRepository: UserRepository): LoadUserUseCase {
+        return LoadUserUseCase(userRepository)
     }
 
     @Provides

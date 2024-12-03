@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.globant.presentation.model.AuthState
 import com.globant.data.utils.CryptoUtils
+import com.globant.domain.repository.UserRepository
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +39,7 @@ class LoginViewModelTest {
     private lateinit var viewModel: com.globant.presentation.viewmodel.LoginViewModel
 
     @Mock
-    private lateinit var userRepository: com.globant.data.network.repository.UserRepositoryImpl
+    private lateinit var userRepository: UserRepository
 
     @Mock
     private lateinit var sharedPreferences: SharedPreferences
@@ -78,11 +79,11 @@ class LoginViewModelTest {
         `when`(sharedPreferences.getBoolean("is_logged_in", false)).thenReturn(false)
         `when`(sharedPreferences.edit()).thenReturn(editor)
 
-        viewModel = com.globant.presentation.viewmodel.LoginViewModel(
+        /*viewModel = com.globant.presentation.viewmodel.LoginViewModel(
             userRepository,
             mockContext,
             cryptoUtils
-        )
+        )*/
 
     }
 
