@@ -7,8 +7,8 @@ import com.globant.imdb2.domain.model.Movie
 
 @Entity(tableName = "movies")
 data class MovieDB (
-    @PrimaryKey
-    val identifier: String,
+    @PrimaryKey(autoGenerate = true)
+    val identifier: Int,
     @ColumnInfo(name = "name")
     val movieName: String,
     @ColumnInfo(name = "release_date")

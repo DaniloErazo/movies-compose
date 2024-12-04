@@ -3,7 +3,7 @@ package com.globant.imdb2.domain.model
 import com.globant.imdb2.data.database.entities.MovieDB
 
 data class Movie(
-    val id: String,
+    val id: Int,
     val name: String,
     val image: String,
     val backImage: String,

@@ -3,6 +3,7 @@ package com.globant.imdb2.data.network.services
 import com.globant.imdb2.data.network.model.MovieDetailAPI
 import com.globant.imdb2.data.network.model.MovieResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -10,7 +11,7 @@ import retrofit2.http.Query
 interface MovieServices {
 
     @GET("movie/popular")
-    suspend fun getTopMovies(@Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): MovieResponse
+    suspend fun getTopMovies(@Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): Response<MovieResponse>
 
     @GET("movie/{id}")
     suspend fun getMovieById(@Path("id") id:String, @Query("api_key") apiKey: String = "749058a6469a1eb756bd200fa7ebb58e"): MovieDetailAPI

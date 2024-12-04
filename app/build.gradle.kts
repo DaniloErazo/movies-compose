@@ -75,6 +75,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Worker
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+    implementation ("androidx.hilt:hilt-work:1.0.0")
+
     //Animations
 
     implementation(libs.lottie.compose)

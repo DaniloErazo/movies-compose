@@ -2,6 +2,7 @@ package com.globant.imdb2.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.globant.imdb2.data.database.LocalDatabase
 import com.globant.imdb2.data.database.dao.MovieDao
 import com.globant.imdb2.data.database.dao.UserDao
@@ -60,5 +61,11 @@ object AppModule {
     @Provides
     fun provideCryptoUtils(): CryptoUtils {
         return CryptoUtils()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 }

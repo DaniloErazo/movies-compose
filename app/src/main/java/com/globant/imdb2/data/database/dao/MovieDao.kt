@@ -2,6 +2,7 @@ package com.globant.imdb2.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.globant.imdb2.data.database.entities.MovieDB
 
@@ -17,6 +18,6 @@ interface MovieDao {
     @Query("DELETE FROM movies")
     suspend fun deleteAll()
 
-    @Insert
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(items: List<MovieDB>): Unit
 }
