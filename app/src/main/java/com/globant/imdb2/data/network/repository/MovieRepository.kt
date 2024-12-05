@@ -29,6 +29,9 @@ class MovieRepository  @Inject constructor(
 
     override suspend fun getPopularMovies(): List<Movie> {
 
+
+        //build flavors to change variable of time repeat interval
+        //save in database
         val downloadDataRequirements = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED).build()
 
