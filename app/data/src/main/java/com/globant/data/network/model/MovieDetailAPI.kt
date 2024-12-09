@@ -21,24 +21,8 @@ data class MovieDetailAPI(
     val genres: List<GenreAPI>
 )
 
-fun MovieDetailAPI.toDomain(): MovieDetail {
-    return MovieDetail(
-        identifier = this.identifier,
-        movieName = this.movieName,
-        movieImage = this.movieImage,
-        score = this.score,
-        backImage = this.backImage,
-        description= this.description,
-        genres = this.genres.map { it.toDomain() }
-    )
-}
-
-
 data class GenreAPI (
     @SerializedName("name")
     val name: String
 )
 
-fun GenreAPI.toDomain(): Genre {
-    return Genre(name = this.name)
-}

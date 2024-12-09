@@ -66,9 +66,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.room.common)
-    implementation(project(":app:domain"))
-    implementation(project(":app:data"))
-    implementation(project(":app:presentation"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,6 +74,10 @@ dependencies {
     androidTestImplementation(libs.junit.jupiter)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(project(":app:domain"))
+    implementation(project(":app:data"))
+    implementation(project(":app:presentation"))
 
     //Animations
 

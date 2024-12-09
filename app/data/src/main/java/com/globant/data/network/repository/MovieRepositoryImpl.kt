@@ -3,7 +3,6 @@ package com.globant.data.network.repository
 import com.globant.data.database.dao.MovieDao
 import com.globant.data.mappers.toDB
 import com.globant.data.mappers.toDomain
-import com.globant.data.network.model.toDomain
 import com.globant.data.network.services.MovieServices
 import com.globant.domain.model.Movie
 import com.globant.domain.model.MovieDetail

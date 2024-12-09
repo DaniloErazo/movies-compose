@@ -1,5 +1,8 @@
-package com.globant.imdb2
+package com.globant.data
 
+import com.globant.data.database.dao.MovieDao
+import com.globant.data.network.repository.MovieRepositoryImpl
+import com.globant.data.network.services.MovieServices
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.test.runTest
@@ -12,12 +15,12 @@ import org.mockito.MockitoAnnotations
 class MovieRepositoryImplTest {
 
     @Mock
-    lateinit var mockMovieServices: com.globant.data.network.services.MovieServices
+    lateinit var mockMovieServices: MovieServices
 
     @Mock
-    lateinit var mockMovieDao: com.globant.data.database.dao.MovieDao
+    lateinit var mockMovieDao: MovieDao
 
-    lateinit var movieRepository: com.globant.data.network.repository.MovieRepositoryImpl
+    lateinit var movieRepository: MovieRepositoryImpl
 
     private val fakeMovieResponse = com.globant.data.network.model.MovieResponse(
         listOf(
@@ -136,12 +139,10 @@ class MovieRepositoryImplTest {
     )
 
 
-
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)  // Initialize mocks
-        movieRepository =
-            com.globant.data.network.repository.MovieRepositoryImpl(mockMovieServices, mockMovieDao)
+        MockitoAnnotations.openMocks(this)
+        movieRepository = MovieRepositoryImpl(mockMovieServices, mockMovieDao)
     }
 
     @Test

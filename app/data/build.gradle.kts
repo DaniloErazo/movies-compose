@@ -45,6 +45,16 @@ dependencies {
 
     implementation(project(":app:domain"))
 
+    //Testing
+    testImplementation(libs.junit.v413)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
+
+    testImplementation (libs.mockito.inline.v520)
+    testImplementation (libs.androidx.core.testing)
+    testImplementation (libs.kotlinx.coroutines.test)
+
     //Retrofit
 
     implementation (libs.retrofit2.retrofit)

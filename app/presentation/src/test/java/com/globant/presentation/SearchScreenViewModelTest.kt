@@ -1,10 +1,13 @@
-package com.globant.imdb2
+package com.globant.presentation
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.globant.data.network.repository.MovieRepositoryImpl
+import com.globant.domain.model.Movie
+import com.globant.presentation.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -24,13 +27,13 @@ class SearchScreenViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: com.globant.presentation.viewmodel.SearchScreenViewModel
+    private lateinit var viewModel: SearchScreenViewModel
 
     @Mock
-    private lateinit var repository: com.globant.data.network.repository.MovieRepositoryImpl
+    private lateinit var repository: MovieRepositoryImpl
 
     private val movieList = listOf(
-        com.globant.domain.model.Movie(
+        Movie(
             id = "1",
             name = "The Shawshank Redemption",
             originalTitle = "The Shawshank Redemption",
@@ -39,7 +42,7 @@ class SearchScreenViewModelTest {
             date = "1994-09-23",
             score = 9.3
         ),
-        com.globant.domain.model.Movie(
+        Movie(
             id = "2",
             name = "The Godfather",
             originalTitle = "The Godfather",
@@ -48,7 +51,7 @@ class SearchScreenViewModelTest {
             date = "1972-03-24",
             score = 9.2
         ),
-        com.globant.domain.model.Movie(
+        Movie(
             id = "3",
             name = "The Dark Knight",
             originalTitle = "The Dark Knight",
@@ -74,8 +77,7 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getPopularMovies()).thenReturn(movieList)
 
-        viewModel =
-            com.globant.presentation.viewmodel.SearchScreenViewModel(repository, mockContext)
+        viewModel = SearchScreenViewModel(repository, mockContext)
 
     }
 
@@ -94,8 +96,7 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getLocalMovies()).thenReturn(movieList)
 
-        viewModel =
-            com.globant.presentation.viewmodel.SearchScreenViewModel(repository, mockContext)
+        viewModel = SearchScreenViewModel(repository, mockContext)
 
     }
 
@@ -141,7 +142,7 @@ class SearchScreenViewModelTest {
 
         `when`(repository.getPopularMovies()).thenReturn(movieList)
 
-        val filteredObserver = mock(Observer::class.java) as Observer<List<com.globant.domain.model.Movie>>
+        val filteredObserver = mock(Observer::class.java) as Observer<List<Movie>>
         viewModel.filtered.observeForever(filteredObserver)
 
         viewModel.loadMovies()

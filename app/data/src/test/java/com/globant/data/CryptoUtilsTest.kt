@@ -1,4 +1,4 @@
-package com.globant.imdb2
+package com.globant.data
 import com.globant.data.utils.CryptoUtils
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

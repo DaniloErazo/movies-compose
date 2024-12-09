@@ -1,9 +1,11 @@
-package com.globant.imdb2
+package com.globant.presentation
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.globant.data.network.repository.MovieRepositoryImpl
+import com.globant.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -23,10 +25,10 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MainViewModelTest {
 
-    private lateinit var viewModel: com.globant.presentation.viewmodel.MainViewModel
+    private lateinit var viewModel: MainViewModel
 
     @Mock
-    private lateinit var repository: com.globant.data.network.repository.MovieRepositoryImpl
+    private lateinit var repository: MovieRepositoryImpl
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
