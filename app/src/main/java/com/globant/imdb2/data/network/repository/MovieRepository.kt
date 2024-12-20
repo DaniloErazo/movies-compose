@@ -29,9 +29,6 @@ class MovieRepository  @Inject constructor(
 
     override suspend fun getPopularMovies(): List<Movie> {
 
-
-        //build flavors to change variable of time repeat interval
-        //save in database
         val downloadDataRequirements = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED).build()
 
@@ -43,7 +40,8 @@ class MovieRepository  @Inject constructor(
             Duration.ofSeconds(30)
         ).setConstraints(downloadDataRequirements).build()
         workManager.enqueueUniquePeriodicWork("moviesWork", ExistingPeriodicWorkPolicy.KEEP, workRequest)
-        return apiService.getTopMovies().body()?.results!!.map { it.toMovie() }
+        return getLocalMovies()
+        //return apiService.getTopMovies().body()?.results!!.map { it.toMovie() }
     }
 
     override suspend fun getMovieById(id: String): MovieDetail {

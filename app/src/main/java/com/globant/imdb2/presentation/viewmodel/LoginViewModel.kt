@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.globant.imdb2.data.database.entities.UserDB
 import com.globant.imdb2.data.database.entities.toDomain
 import com.globant.imdb2.data.network.repository.DataStoreRepository
@@ -26,6 +27,7 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val signInUseCase: SignInUseCase,
+    private val workManager: WorkManager,
     private val cryptoUtils: CryptoUtils): ViewModel() {
 
     var loggedUser = MutableLiveData<AuthState>()
@@ -92,6 +94,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch{
             loggedUser.postValue(AuthState(false, null))
             dataStoreRepository.logOutUser()
+            workManager.cancelUniqueWork("moviesWork")
         }
     }
 

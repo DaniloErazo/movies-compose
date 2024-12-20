@@ -83,8 +83,6 @@ dependencies {
 
     implementation(libs.lottie.compose)
 
-
-
     //Test
 
     testImplementation(libs.junit.v413)
