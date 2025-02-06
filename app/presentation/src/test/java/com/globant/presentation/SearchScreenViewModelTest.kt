@@ -22,6 +22,11 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
+//Library MocKk support for  kotlin
+//assertj library
+//MVI architecture
+//Espresso
+//Accessibility
 class SearchScreenViewModelTest {
 
     @get:Rule
